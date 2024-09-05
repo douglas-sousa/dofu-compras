@@ -1,9 +1,47 @@
-export default function Home() {
+import Text from "@/components/atoms/text";
+import PostInTimeline from "@/components/organisms/PostInTimeline";
+
+export default function Home () {
     return (
         <main className="font-[family-name:var(--font-geist-sans)] p-8">
-            <p className="font-bold text-center text-xl">
+            <Text variant="h1">
                 Alguns registros de compras
-            </p>
+            </Text>
+
+            <div className="pt-16">
+                <PostInTimeline
+                    post={{
+                        title: "CD da 鬼頭明",
+                        preview: "Ssdsl sldslds dsldlsd ldsldslds dlsdlsd",
+                        date: new Date(),
+                        side: "left"
+                    }}
+                />
+                <PostInTimeline
+                    post={{
+                        title: "CD da 鬼頭明",
+                        preview: "Ssdsl sldslds dsldlsd ldsldslds dlsdlsd",
+                        date: new Date(),
+                        side: "right"
+                    }}
+                />
+                <PostInTimeline
+                    post={{
+                        title: "CD da 鬼頭明",
+                        preview: "Ssdsl sldslds dsldlsd ldsldslds dlsdlsd",
+                        date: new Date(),
+                        side: "left"
+                    }}
+                />
+                <PostInTimeline
+                    post={{
+                        title: "CD da 鬼頭明",
+                        preview: "Ssdsl sldslds dsldlsd ldsldslds dlsdlsd",
+                        date: new Date(),
+                        side: "right"
+                    }}
+                />
+            </div>
         </main>
     );
 }
