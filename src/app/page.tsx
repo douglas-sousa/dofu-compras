@@ -8,7 +8,7 @@ export default function Home () {
                 Alguns registros de compras
             </Text>
 
-            <div className="pt-16">
+            <div className="pt-16 mx-auto w-[55.382rem]">
                 <PostInTimeline
                     post={{
                         title: "CD da 鬼頭明",

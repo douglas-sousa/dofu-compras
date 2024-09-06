@@ -12,10 +12,12 @@ export default function PostInTimeline ({ post }: PostInTimelineProps) {
     function renderTimelinePoint () {
         return (
             <span className={twMerge(
-                "absolute top-1/2 -translate-y-1/2",
-                "-right-16 select-none z-10"
+                "select-none z-10"
             )}>
-                <span className="relative text-4xl text-white">
+                <span
+                    className="relative text-4xl text-white"
+                    style={{ textShadow: '0 0 black' }}    
+                >
                     ⚈
                     <span className={twMerge(
                         "absolute text-2xl text-blue-500",
@@ -32,10 +34,9 @@ export default function PostInTimeline ({ post }: PostInTimelineProps) {
         return post.side && (
             <span
                 className={twMerge(
-                    "absolute text-white text-3xl select-none",
-                    "top-1/2 -translate-y-1/2",
-                    post.side === "left" && "-right-5",
-                    post.side === "right" && "left-[120%] rotate-180",
+                    "text-white text-3xl select-none",
+                    post.side === "right" && "rotate-180 -mr-1",
+                    post.side === "left" && "-ml-1",
                 )}
             >
                 ▶
@@ -44,12 +45,15 @@ export default function PostInTimeline ({ post }: PostInTimelineProps) {
     }
 
     return (
-        <div className="relative w-fit">
+        <div className={twMerge(
+            "flex items-center",
+            post.side === "left" && "ml-[1.6rem]",
+            post.side === "right" && "flex-row-reverse mr-5"
+        )}>
             <PostPreview
                 {...post}
                 className={twMerge(
                     "my-4",
-                    post.side === "right" && "translate-x-[125%]"
                 )}
             />
             {renderPostArrow()}
@@ -57,7 +61,7 @@ export default function PostInTimeline ({ post }: PostInTimelineProps) {
             <div
                 className={twMerge(
                     "border-l-8 border-solid border-gray-300 h-44",
-                    "absolute top-1/2 -translate-y-1/2 -right-[3.3rem]"
+                    "absolute left-1/2"
                 )}
             />
         </div>
