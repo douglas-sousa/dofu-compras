@@ -5,9 +5,29 @@ type DrawerProps = {
     isOpen: boolean;
     onClose: () => void;
     children: ReactNode;
+    overlay?: ReactNode;
 }
 
-export default function Drawer ({ isOpen, onClose, children }: DrawerProps) {
+export default function Drawer ({
+    isOpen,
+    onClose,
+    children,
+    overlay: providedOverlay,
+}: DrawerProps) {
+
+    function renderOverlay () {
+        const overlay = providedOverlay
+            ? providedOverlay
+            : (
+                <div
+                    className="fixed top-0 left-0 w-full h-full z-40"
+                    onClick={onClose}
+                />
+            );
+
+        return isOpen && overlay;
+    }
+
     return (
         <>
             <div
@@ -26,12 +46,7 @@ export default function Drawer ({ isOpen, onClose, children }: DrawerProps) {
                 </button>
                 {children}
             </div>
-            {isOpen && (
-                <div
-                    className="fixed top-0 left-0 w-full h-full z-40"
-                    onClick={onClose}
-                />
-            )}
+            {renderOverlay()}
         </>
     )
 }

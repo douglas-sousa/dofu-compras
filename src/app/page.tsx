@@ -1,12 +1,9 @@
 /* eslint-disable max-len */
 "use client"
-
 import { useSearchParams } from "next/navigation";
-import Image from "next/image";
-import { twMerge } from "tailwind-merge";
 
 import Text from "@/components/atoms/Text";
-import Drawer from "@/components/atoms/Drawer";
+import PostViewer from "@/components/molecules/PostViewer";
 import PostInTimeline from "@/components/organisms/PostInTimeline";
 
 const FAKE_ITEMS = [
@@ -62,7 +59,12 @@ export default function Home () {
 
     const queryPost = searchParams.has("post")
         ? FAKE_ITEMS[Number(searchParams.get("post")) - 1]
-        : null;
+        : undefined;
+
+    const queryImageInZoom = searchParams.has("image")
+        ? FAKE_ITEMS[Number(searchParams.get("post")) - 1]
+            .images[Number(searchParams.get("image")) - 1]
+        : undefined;
 
     return (
         <main className="font-[family-name:var(--font-geist-sans)] p-8">
@@ -90,57 +92,11 @@ export default function Home () {
                 ))}
             </div>
 
-            <Drawer
+            <PostViewer
                 isOpen={searchParams.has("post")}
-                onClose={() => {
-                    window.history.replaceState(
-                        {},
-                        document.title,
-                        window.location.origin
-                    );
-                }}
-            >
-                <div>
-                    <section>
-                        <Text variant="h2">
-                            {queryPost?.title}
-                        </Text>
-                        <hr className="bg-gray-200 my-4" />
-                        <Text
-                            variant="h3"
-                            className="text-gray-500"
-                        >
-                            Descrição
-                        </Text>
-                        {queryPost?.description.split("\n\n").map((paragraph, index) => (
-                            <Text
-                                key={index}
-                                className={twMerge(index !== 0 && "mt-4")}
-                            >
-                                {paragraph}
-                            </Text>
-                        ))}
-                        <hr className="bg-gray-200 my-4" />
-                    </section>
-                    <section>
-                        <Text
-                            variant="h3"
-                            className="text-gray-500"
-                        >
-                            Imagens
-                        </Text>
-                        {queryPost?.images.map((imageSource) => (
-                            <Image
-                                key={imageSource}
-                                src={imageSource}
-                                alt="Imagem do produto"
-                                width="320"
-                                height="250"
-                            />
-                        ))}
-                    </section>
-                </div>
-            </Drawer>
+                post={queryPost}
+                imageInZoom={queryImageInZoom}
+            />
         </main>
     );
 }
