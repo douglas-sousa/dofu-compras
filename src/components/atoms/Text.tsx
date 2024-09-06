@@ -2,12 +2,13 @@ import { createElement, HTMLAttributes } from "react";
 import { twMerge } from 'tailwind-merge';
 
 type TextProps = HTMLAttributes<HTMLParagraphElement> & {
-    variant?: "h1" | "h2" | "p";
+    variant?: "h1" | "h2" | "h3" | "p";
 }
 
 const VARIANT = {
-    h1: "font-bold text-center text-2xl",
+    h1: "font-bold text-2xl",
     h2: "font-bold text-xl",
+    h3: "font-medium text-lg",
     p: "text-lg",
 };
 

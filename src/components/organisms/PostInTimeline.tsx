@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { twMerge } from 'tailwind-merge';
 
 import PostPreview, { 
@@ -50,12 +51,20 @@ export default function PostInTimeline ({ post }: PostInTimelineProps) {
             post.side === "left" && "ml-[1.6rem]",
             post.side === "right" && "flex-row-reverse mr-5"
         )}>
-            <PostPreview
-                {...post}
-                className={twMerge(
-                    "my-4",
-                )}
-            />
+            <Link
+                scroll={false}
+                href={{
+                    query: { post: post.id }
+                }}
+                key={post.id}
+            >
+                <PostPreview
+                    {...post}
+                    className={twMerge(
+                        "my-4",
+                    )}
+                />
+            </Link>
             {renderPostArrow()}
             {renderTimelinePoint()}
             <div

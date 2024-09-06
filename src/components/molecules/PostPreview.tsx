@@ -2,7 +2,7 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { twMerge } from 'tailwind-merge';
 
-import Text from "@/components/atoms/text";
+import Text from "@/components/atoms/Text";
 
 export type PostPreviewProps = {
     title: string;
@@ -10,6 +10,7 @@ export type PostPreviewProps = {
     date: Date;
     side?: "right" | "left";
     className?: HTMLDivElement['className'];
+    id: number;
 }
 
 export default function PostPreview ({
