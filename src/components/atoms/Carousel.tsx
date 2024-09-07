@@ -28,18 +28,21 @@ export default function Carousel ({ images, onImageClick }: CarouselProps) {
         setCurrentIndex(previousIndex);
     }
 
+    const BUTTON_STYLE = twMerge(
+        "bg-none border-none px-2 bg-gray-300 hover:bg-gray-400",
+        "cursor-pointer rounded-full self-center text-white",
+        images.length === 1 && "pointer-events-none"
+    );
+
     return (
         <div
             className={twMerge(
-                "w-full h-48 auto overflow-hidden",
-                "flex justify-between mt-4 gap-4"
+                "w-full h-52 auto overflow-hidden relative",
+                "flex justify-between py-4 gap-4 select-none"
             )}
         >
             <button
-                className={twMerge(
-                    "bg-none border-none px-2 bg-gray-200 hover:bg-gray-300",
-                    "cursor-pointer rounded-full self-center"
-                )}
+                className={BUTTON_STYLE}
                 onClick={goToPreviousImage}
             >
                 ❮
@@ -55,11 +58,16 @@ export default function Carousel ({ images, onImageClick }: CarouselProps) {
                     onClick={() => onImageClick(currentIndex)}
                 />
             </div>
-            <button
+            <p
                 className={twMerge(
-                    "bg-none border-none px-2 bg-gray-200 hover:bg-gray-300",
-                    "cursor-pointer rounded-full self-center"
+                    "text-xs text-end absolute bottom-0 left-1/2",
+                    "-translate-x-1/2"
                 )}
+            >
+                    Imagem {currentIndex + 1} de {images.length}
+            </p>
+            <button
+                className={BUTTON_STYLE}
                 onClick={goToNextImage}
             >
                 ❯

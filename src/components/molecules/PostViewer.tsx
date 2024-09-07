@@ -62,8 +62,9 @@ export default function PostViewer ({
                 >
                     <button
                         className={twMerge(
-                            "absolute top-2 left-2 cursor-pointer",
-                            "text-white z-40"
+                            "absolute top-2 left-4 cursor-pointer px-[0.3rem]",
+                            "text-white z-40 bg-gray-400 hover:bg-gray-500",
+                            "rounded-full"
                         )}
                         onClick={(event) => {
                             event.stopPropagation();
@@ -87,40 +88,50 @@ export default function PostViewer ({
                 </div>
             )}
         >
-            <div>
+            <div
+                className="flex flex-col"
+            >
                 <Text variant="h2">
                     {post?.title}
                 </Text>
                 <hr className="bg-gray-200 my-4" />
-                <Text
-                    variant="h3"
-                    className="text-gray-500"
+                <section
+                    className={twMerge(
+                        "overflow-y-auto max-h-[calc(100vh-23rem)] min-h-40"
+                    )}
                 >
-                    Descrição
-                </Text>
-                {paragraphs?.map((eachParagraph, index) => (
                     <Text
-                        key={index}
-                        className="mt-4"
+                        variant="h3"
+                        className="text-gray-500"
                     >
-                        {eachParagraph}
+                        Descrição
                     </Text>
-                ))}
-                <hr className="bg-gray-200 my-4" />
-                {!!post?.images.length && (
-                    <>
+                    {paragraphs?.map((eachParagraph, index) => (
                         <Text
-                            variant="h3"
-                            className="text-gray-500"
+                            key={index}
+                            className="mt-4"
                         >
-                            Imagens
+                            {eachParagraph}
                         </Text>
-                        <Carousel
-                            images={post?.images}
-                            onImageClick={onImageClick}
-                        />
-                    </>
-                )}
+                    ))}
+                </section>
+                <hr className="bg-gray-200 my-4" />
+                <section>
+                    {!!post?.images.length && (
+                        <>
+                            <Text
+                                variant="h3"
+                                className="text-gray-500"
+                            >
+                                Imagens
+                            </Text>
+                            <Carousel
+                                images={post?.images}
+                                onImageClick={onImageClick}
+                            />
+                        </>
+                    )}
+                </section>
             </div>
         </Drawer>
     );

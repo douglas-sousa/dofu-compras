@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
 "use client"
+import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 
 import Text from "@/components/atoms/Text";
@@ -67,6 +68,14 @@ export default function Home () {
         ? FAKE_ITEMS[Number(searchParams.get("post")) - 1]
             .images[Number(searchParams.get("image")) - 1]
         : undefined;
+
+    useEffect(() => {
+        if (searchParams.has("post")) {
+            document.documentElement.style.overflowY = "hidden";
+        } else {
+            document.documentElement.style.overflowY = "";
+        }
+    }, [searchParams]);
 
     return (
         <main className="font-[family-name:var(--font-geist-sans)] p-8">
