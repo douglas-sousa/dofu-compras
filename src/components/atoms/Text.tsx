@@ -1,5 +1,5 @@
 import { createElement, HTMLAttributes } from "react";
-import { twMerge } from 'tailwind-merge';
+import { twMerge } from "tailwind-merge";
 
 type TextProps = HTMLAttributes<HTMLParagraphElement> & {
     variant?: "h1" | "h2" | "h3" | "p";
@@ -13,7 +13,7 @@ const VARIANT = {
 };
 
 export default function Text ({
-    variant = 'p',
+    variant = "p",
     children,
     className: overriddenStyle,
     ...rest

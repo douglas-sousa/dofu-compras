@@ -2,6 +2,8 @@ import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 import Image from "next/image";
 
+import Text from "@/components/atoms/Text";
+
 type CarouselProps = {
     images: string[];
     onImageClick: (index: number) => void;
@@ -58,14 +60,14 @@ export default function Carousel ({ images, onImageClick }: CarouselProps) {
                     onClick={() => onImageClick(currentIndex)}
                 />
             </div>
-            <p
+            <Text
                 className={twMerge(
                     "text-xs text-end absolute bottom-0 left-1/2",
                     "-translate-x-1/2"
                 )}
             >
                     Imagem {currentIndex + 1} de {images.length}
-            </p>
+            </Text>
             <button
                 className={BUTTON_STYLE}
                 onClick={goToNextImage}

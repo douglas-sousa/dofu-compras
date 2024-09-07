@@ -1,12 +1,6 @@
+import Home from "@/components/templates/Home";
+
 /* eslint-disable max-len */
-"use client"
-import { useEffect } from "react";
-import { useSearchParams } from "next/navigation";
-
-import Text from "@/components/atoms/Text";
-import PostViewer from "@/components/molecules/PostViewer";
-import PostInTimeline from "@/components/organisms/PostInTimeline";
-
 const FAKE_ITEMS = [
     {
         title: "Modern Frozen Fish",
@@ -57,57 +51,8 @@ const FAKE_ITEMS = [
     }
 ];
 
-export default function Home () {
-    const searchParams = useSearchParams();
-
-    const queryPost = searchParams.has("post")
-        ? FAKE_ITEMS[Number(searchParams.get("post")) - 1]
-        : undefined;
-
-    const queryImageInZoom = searchParams.has("image")
-        ? FAKE_ITEMS[Number(searchParams.get("post")) - 1]
-            .images[Number(searchParams.get("image")) - 1]
-        : undefined;
-
-    useEffect(() => {
-        if (searchParams.has("post")) {
-            document.documentElement.style.overflowY = "hidden";
-        } else {
-            document.documentElement.style.overflowY = "";
-        }
-    }, [searchParams]);
-
+export default async function App () {
     return (
-        <main className="font-[family-name:var(--font-geist-sans)] p-8">
-            <Text
-                variant="h1"
-                className="text-center"
-            >
-                Alguns registros de compras
-            </Text>
-
-            <div className="pt-16 mx-auto w-[55.382rem]">
-                {FAKE_ITEMS.map((post, index) => (
-                    <PostInTimeline
-                        key={post.id}
-                        post={{
-                            ...post,
-                            preview: post.description.length <= 85
-                                ? post.description
-                                : post.description.slice(0, 82).padEnd(85, '.'),
-                            side: index % 2
-                                ? "right"
-                                : "left"
-                        }}
-                    />
-                ))}
-            </div>
-
-            <PostViewer
-                isOpen={searchParams.has("post")}
-                post={queryPost}
-                imageInZoom={queryImageInZoom}
-            />
-        </main>
+        <Home posts={FAKE_ITEMS} />
     );
 }

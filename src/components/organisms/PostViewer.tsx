@@ -3,17 +3,12 @@ import { twMerge } from "tailwind-merge";
 
 import Text from "@/components/atoms/Text";
 import Drawer from "@/components/atoms/Drawer";
-import Carousel from "@/components/atoms/Carousel";
+import Carousel from "@/components/molecules/Carousel";
+import type CommonTypes from "@/services/CommonTypes";
 
 type PostViewerProps = {
     isOpen: boolean;
-    post?: {
-        title: string;
-        description: string;
-        date: Date;
-        id: number;
-        images: string[];
-    };
+    post?: CommonTypes.Post;
     imageInZoom?: string;
 }
 
