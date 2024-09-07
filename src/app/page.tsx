@@ -13,7 +13,9 @@ const FAKE_ITEMS = [
         date: new Date("2024, 02, 02"),
         id: 1,
         images: [
-            "https://images.pexels.com/photos/10152063/pexels-photo-10152063.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+            "https://images.pexels.com/photos/10152063/pexels-photo-10152063.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+            "https://images.pexels.com/photos/351283/pexels-photo-351283.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+            "https://images.pexels.com/photos/25584127/pexels-photo-25584127/free-photo-of-a-cup-of-coffee-sits-on-a-white-stool.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
         ]
     },
     {

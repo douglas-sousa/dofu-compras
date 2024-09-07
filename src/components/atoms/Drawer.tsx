@@ -20,7 +20,9 @@ export default function Drawer ({
             ? providedOverlay
             : (
                 <div
-                    className="fixed top-0 left-0 w-full h-full z-40"
+                    className={twMerge(
+                        "fixed top-0 left-0 w-full h-full z-40 bg-black/15"
+                    )}
                     onClick={onClose}
                 />
             );

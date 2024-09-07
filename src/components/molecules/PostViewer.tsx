@@ -3,6 +3,7 @@ import { twMerge } from "tailwind-merge";
 
 import Text from "@/components/atoms/Text";
 import Drawer from "@/components/atoms/Drawer";
+import Carousel from "@/components/atoms/Carousel";
 
 type PostViewerProps = {
     isOpen: boolean;
@@ -24,6 +25,7 @@ export default function PostViewer ({
 
     function onImageClick (imageIndex: number) {
         const url = new URL(window.location.href);    
+        url.searchParams.delete("image");
         url.searchParams.append("image", String(imageIndex + 1));
         window.history
             .replaceState({}, document.title, url.pathname + url.search);    
@@ -54,13 +56,14 @@ export default function PostViewer ({
                 <div
                     className={twMerge(
                         "fixed top-0 left-0 size-full z-40",
-                        "bg-black/50 p-8"
+                        "bg-black/50 p-8 backdrop-blur-sm"
                     )}
                     onClick={onDrawerClose}
                 >
                     <button
                         className={twMerge(
-                            "absolute top-2 left-2 cursor-pointer text-white"
+                            "absolute top-2 left-2 cursor-pointer",
+                            "text-white z-40"
                         )}
                         onClick={(event) => {
                             event.stopPropagation();
@@ -69,18 +72,18 @@ export default function PostViewer ({
                     >
                         ✕
                     </button>
-                    <Image
-                        key={imageInZoom}
-                        src={imageInZoom}
-                        alt="Imagem do produto"
-                        width="0"
-                        height="0"
-                        sizes="74vw"
-                        style={{ width: '74%', height: 'auto' }}
-                        onClick={(event) => {
-                            event.stopPropagation();
-                        }}
-                    />
+                    <div className="h-full w-[calc(100%-24rem)] relative">
+                        <Image
+                            key={imageInZoom}
+                            src={imageInZoom}
+                            alt="Imagem do produto"
+                            fill
+                            objectFit="contain"
+                            onClick={(event) => {
+                                event.stopPropagation();
+                            }}
+                        />
+                    </div>
                 </div>
             )}
         >
@@ -98,28 +101,26 @@ export default function PostViewer ({
                 {paragraphs?.map((eachParagraph, index) => (
                     <Text
                         key={index}
-                        className={twMerge(index !== 0 && "mt-4")}
+                        className="mt-4"
                     >
                         {eachParagraph}
                     </Text>
                 ))}
                 <hr className="bg-gray-200 my-4" />
-                <Text
-                    variant="h3"
-                    className="text-gray-500"
-                >
-                    Imagens
-                </Text>
-                {post?.images.map((imageSource, index) => (
-                    <Image
-                        key={imageSource}
-                        src={imageSource}
-                        alt={`Imagem ${index + 1} do produto`}
-                        width="320"
-                        height="250"
-                        onClick={() => onImageClick(index)}
-                    />
-                ))}
+                {!!post?.images.length && (
+                    <>
+                        <Text
+                            variant="h3"
+                            className="text-gray-500"
+                        >
+                            Imagens
+                        </Text>
+                        <Carousel
+                            images={post?.images}
+                            onImageClick={onImageClick}
+                        />
+                    </>
+                )}
             </div>
         </Drawer>
     );
