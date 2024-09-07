@@ -9,6 +9,7 @@
             "code": 80,
             "ignoreComments": true
         }],
-        "space-before-function-paren": ["error", "always"]
+        "space-before-function-paren": ["error", "always"],
+        "quotes": ["error", "double"]
     }
 }
