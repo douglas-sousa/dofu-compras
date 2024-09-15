@@ -7,9 +7,12 @@
         "no-trailing-spaces": ["off"],
         "max-len": ["error", {
             "code": 80,
-            "ignoreComments": true
+            "ignoreComments": true,
+            "ignoreUrls": true
         }],
         "space-before-function-paren": ["error", "always"],
-        "quotes": ["error", "double"]
+        "quotes": ["error", "double"],
+        "semi": ["error", "always"],
+        "comma-dangle": ["error", "never"]
     }
 }

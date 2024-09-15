@@ -3,8 +3,9 @@ const nextConfig = {
     images: {
         remotePatterns: [
             {
-                protocol: 'https',
-                hostname: 'images.pexels.com',
+                protocol: "https",
+                hostname: "storage.googleapis.com",
+                pathname: "/bucket.dofu.com.br/**"
             },
         ],
     }
