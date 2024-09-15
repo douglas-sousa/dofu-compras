@@ -9,7 +9,7 @@ const VARIANT = {
     h1: "font-bold text-2xl",
     h2: "font-bold text-xl",
     h3: "font-medium text-lg",
-    p: "text-lg",
+    p: "text-lg"
 };
 
 export default function Text ({

@@ -12,7 +12,7 @@ export default function Drawer ({
     isOpen,
     onClose,
     children,
-    overlay: providedOverlay,
+    overlay: providedOverlay
 }: DrawerProps) {
 
     function renderOverlay () {
@@ -50,5 +50,5 @@ export default function Drawer ({
             </div>
             {renderOverlay()}
         </>
-    )
+    );
 }

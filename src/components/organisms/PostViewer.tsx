@@ -4,18 +4,18 @@ import { twMerge } from "tailwind-merge";
 import Text from "@/components/atoms/Text";
 import Drawer from "@/components/atoms/Drawer";
 import Carousel from "@/components/molecules/Carousel";
-import type CommonTypes from "@/services/CommonTypes";
+import type { Frontend } from "@/services/types";
 
 type PostViewerProps = {
     isOpen: boolean;
-    post?: CommonTypes.Post;
+    post?: Frontend.Post;
     imageInZoom?: string;
 }
 
 export default function PostViewer ({
     isOpen,
     post,
-    imageInZoom,
+    imageInZoom
 }: PostViewerProps) {
 
     function onImageClick (imageIndex: number) {
@@ -41,7 +41,7 @@ export default function PostViewer ({
         );
     }
 
-    const paragraphs = post?.description.split("\n\n");
+    const paragraphs = post?.description.split("\r\n");
     
     return (
         <Drawer
@@ -92,7 +92,7 @@ export default function PostViewer ({
                 <hr className="bg-gray-200 my-4" />
                 <section
                     className={twMerge(
-                        "overflow-y-auto max-h-[calc(100vh-23rem)] min-h-40"
+                        "overflow-y-auto max-h-[calc(100vh-23rem)] min-h-16"
                     )}
                 >
                     <Text

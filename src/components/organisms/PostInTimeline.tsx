@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { twMerge } from 'tailwind-merge';
+import { twMerge } from "tailwind-merge";
 
 import PostPreview, { 
     PostPreviewProps
@@ -17,7 +17,7 @@ export default function PostInTimeline ({ post }: PostInTimelineProps) {
             )}>
                 <span
                     className="relative text-4xl text-white"
-                    style={{ textShadow: '0 0 black' }}    
+                    style={{ textShadow: "0 0 black" }}    
                 >
                     ⚈
                     <span className={twMerge(
@@ -74,5 +74,5 @@ export default function PostInTimeline ({ post }: PostInTimelineProps) {
                 )}
             />
         </div>
-    )
+    );
 }

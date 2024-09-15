@@ -1,14 +1,14 @@
-"use client"
+"use client";
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 
 import Text from "@/components/atoms/Text";
 import PostViewer from "@/components/organisms/PostViewer";
 import PostInTimeline from "@/components/organisms/PostInTimeline";
-import type CommonTypes from "@/services/CommonTypes";
+import type { Frontend } from "@/services/types";
 
 type HomeProps = {
-    posts: CommonTypes.Post[];
+    posts: Frontend.Post[];
 }
 
 export default function Home ({ posts }: HomeProps) {
@@ -37,7 +37,7 @@ export default function Home ({ posts }: HomeProps) {
                 variant="h1"
                 className="text-center"
             >
-                Alguns registros de compras
+                Registros de compras
             </Text>
 
             <div className="pt-16 mx-auto w-[55.382rem]">
