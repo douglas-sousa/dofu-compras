@@ -9,7 +9,6 @@ import { fromRowToFrontendPost } from "./utils";
 export async function getPosts () {
     try {
         const rawPosts = await database.selectPosts();
-
         return { posts: rawPosts.map(fromRowToFrontendPost) };
     } catch {
         return { posts: [] };
@@ -44,11 +43,9 @@ export async function createPost (formdata: FormData) {
         formdata.get("images.2") as File
     ].filter((currentFile) => currentFile.size > 0);
 
-    const uploadedImages = await Promise.all(
-        images.map((_, index) => bucket.uploadImage({
-            filename: index === 0 ? "misato.png" : "rei.png"
-        }))
-    );
+    const uploadedImages = await Promise.all(images.map(
+        (currentFile, index) => bucket.uploadImage(currentFile, row.id, index)
+    ));
 
     await Promise.all(uploadedImages.map((uImage) => {
         return database.insertImage({

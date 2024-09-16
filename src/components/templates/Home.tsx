@@ -1,10 +1,12 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { twMerge } from "tailwind-merge";
 
 import Text from "@/components/atoms/Text";
 import PostViewer from "@/components/organisms/PostViewer";
 import PostInTimeline from "@/components/organisms/PostInTimeline";
+import PostCreation from "@/components/organisms/PostCreation";
 import type { Frontend } from "@/services/types";
 
 type HomeProps = {
@@ -30,6 +32,16 @@ export default function Home ({ posts }: HomeProps) {
             document.documentElement.style.overflowY = "";
         }
     }, [searchParams]);
+
+    const [inCreation, setInCreation] = useState(false);
+
+    function onPostCreationClick () {
+        setInCreation(true);
+    }
+
+    function onDrawerClose () {
+        setInCreation(false);
+    }
 
     return (
         <main className="font-[family-name:var(--font-geist-sans)] p-8">
@@ -57,10 +69,25 @@ export default function Home ({ posts }: HomeProps) {
                 ))}
             </div>
 
+            <button
+                className={twMerge(
+                    "bg-blue-500 text-white py-4 px-6",
+                    "rounded-full text-xl fixed bottom-4 left-4"
+                )}
+                onClick={onPostCreationClick}
+            >
+                +
+            </button>
+
             <PostViewer
                 isOpen={searchParams.has("post")}
                 post={queryPost}
                 imageInZoom={queryImageInZoom}
+            />
+
+            <PostCreation
+                isOpen={inCreation}
+                onClose={onDrawerClose}
             />
         </main>
     );

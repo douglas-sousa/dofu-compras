@@ -92,7 +92,7 @@ export default function PostViewer ({
                 <hr className="bg-gray-200 my-4" />
                 <section
                     className={twMerge(
-                        "overflow-y-auto max-h-[calc(100vh-23rem)] min-h-16"
+                        "overflow-y-auto max-h-[calc(100vh-24.5rem)] min-h-16"
                     )}
                 >
                     <Text

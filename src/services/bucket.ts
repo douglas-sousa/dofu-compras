@@ -1,6 +1,7 @@
 "use server";
 import path from "node:path";
-import { createReadStream } from "node:fs";
+import { Readable } from "node:stream";
+import type { ReadableStream } from "node:stream/web";
 import { Storage } from "@google-cloud/storage";
 import type { Bucket } from "@/services/types";
 
@@ -10,25 +11,24 @@ const storage = new Storage({
     projectId: process.env.PROJECT_ID
 });
 
-export async function uploadImage ({
-    filename
-}: { filename: string }): Promise<Bucket.UploadedImage> {
-    const fileName = filename;
-    const filePath = path.join(process.cwd(), fileName);
+export async function uploadImage (
+    image: File,
+    postId: number,
+    imageIndex: number,
+): Promise<Bucket.UploadedImage> {
     const bucket = storage.bucket(process.env.BUCKET_ID!);
-    const bucketFile = bucket.file(fileName);
+    const bucketFile = bucket.file(`${postId}.${imageIndex + 1}.${image.name}`);
 
     return new Promise((resolve, reject) => {
-        createReadStream(filePath)
+        Readable.fromWeb(image.stream() as ReadableStream)
             .pipe(bucketFile.createWriteStream({
-                resumable: false,
-                gzip: true
+                resumable: false
             }))
             .on("error", reject)
             .on("finish", async () => {
                 await bucketFile.makePublic();
                 resolve({
-                    link: `https://storage.googleapis.com/${bucket.name}/${fileName}`
+                    link: `https://storage.googleapis.com/${bucket.name}/${bucketFile.name}`
                 });
             });
     });
