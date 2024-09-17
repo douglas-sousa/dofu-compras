@@ -16,14 +16,23 @@ type HomeProps = {
 export default function Home ({ posts }: HomeProps) {
     const searchParams = useSearchParams();
 
-    const queryPost = searchParams.has("post")
-        ? posts[Number(searchParams.get("post")) - 1]
-        : undefined;
+    function getPostRequestedInURL () {
+        if (searchParams.has("post")) {
+            return posts.find((currentPost) =>
+                currentPost.id === Number(searchParams.get("post"))
+            );
+        }
+    }
 
-    const queryImageInZoom = searchParams.has("image")
-        ? posts[Number(searchParams.get("post")) - 1]
-            .images[Number(searchParams.get("image")) - 1]
-        : undefined;
+    const queryPost = getPostRequestedInURL();
+
+    function getImageRequestedInURL () {
+        if (searchParams.has("image")) {
+            return queryPost?.images[Number(searchParams.get("image")) - 1];
+        }
+    }
+
+    const queryImageInZoom = getImageRequestedInURL();
 
     useEffect(() => {
         if (searchParams.has("post")) {
@@ -61,6 +70,9 @@ export default function Home ({ posts }: HomeProps) {
                             preview: post.description.length <= 85
                                 ? post.description
                                 : post.description.slice(0, 82).padEnd(85, "."),
+                            title: post.title.length <= 21
+                                ? post.title
+                                : post.title.slice(0, 18).padEnd(21, "."),
                             side: index % 2
                                 ? "right"
                                 : "left"

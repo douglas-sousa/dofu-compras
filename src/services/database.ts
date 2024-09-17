@@ -85,6 +85,8 @@ export async function selectPosts (): Promise<Database.RowPost[]> {
                 Images ON Posts.id = Images.post_id
             GROUP BY
                 Posts.id
+            ORDER BY
+                Posts.datetime DESC
         `,
         (error, rows: Database.RowPost[]) => {
             if (error) {

@@ -69,7 +69,7 @@ export default function PostInTimeline ({ post }: PostInTimelineProps) {
             {renderTimelinePoint()}
             <div
                 className={twMerge(
-                    "border-l-8 border-solid border-gray-300 h-44",
+                    "border-l-8 border-solid border-gray-300 h-56",
                     "absolute left-1/2"
                 )}
             />
