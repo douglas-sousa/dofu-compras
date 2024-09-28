@@ -3,6 +3,7 @@ import { twMerge } from "tailwind-merge";
 import Image from "next/image";
 
 import Text from "@/components/atoms/Text";
+import { BLUR_IMAGE_URL } from "@/services/constants";
 
 type CarouselProps = {
     images: string[];
@@ -57,6 +58,8 @@ export default function Carousel ({ images, onImageClick }: CarouselProps) {
                     fill
                     objectFit="contain"
                     className="cursor-pointer"
+                    placeholder="blur"
+                    blurDataURL={BLUR_IMAGE_URL}
                     onClick={() => onImageClick(currentIndex)}
                 />
             </div>

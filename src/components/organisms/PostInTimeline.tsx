@@ -56,7 +56,6 @@ export default function PostInTimeline ({ post }: PostInTimelineProps) {
                 href={{
                     query: { post: post.id }
                 }}
-                key={post.id}
             >
                 <PostPreview
                     {...post}
@@ -69,7 +68,7 @@ export default function PostInTimeline ({ post }: PostInTimelineProps) {
             {renderTimelinePoint()}
             <div
                 className={twMerge(
-                    "border-l-8 border-solid border-gray-300 h-56",
+                    "border-l-8 border-solid border-gray-300 h-64",
                     "absolute left-1/2"
                 )}
             />

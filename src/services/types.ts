@@ -34,3 +34,9 @@ export namespace Database {
         image_links: string;
     };
 }
+
+export namespace Utils {
+    export type GenerateUsernameParams = {
+        salt: string;
+    }
+}

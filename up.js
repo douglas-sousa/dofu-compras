@@ -5,7 +5,7 @@ const database = new sqlite.Database(process.env.DATABASE_FILE);
 
 database.exec(`
     CREATE TABLE IF NOT EXISTS Users (
-        id TEXT PRIMARY KEY
+        id VARCHAR(10) PRIMARY KEY
     );
 `);
 
@@ -15,7 +15,7 @@ database.exec(`
         title VARCHAR(255) NOT NULL,
         description TEXT,
         datetime DATETIME,
-        user_id TEXT,
+        user_id VARCHAR(10),
         FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
     );
 `);

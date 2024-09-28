@@ -1,20 +1,28 @@
 "use server";
 
-import crypto from "node:crypto";
 import sqlite from "sqlite3";
 
-import type { Database } from "@/services/types";
+import type { Database, Utils } from "@/services/types";
+import { generateUsername } from "@/services/utils";
 
 
 const database = new sqlite.Database(process.env.DATABASE_FILE!);
 
-export async function insertUser (): Promise<RowUser> {
-    const userId = crypto.randomUUID();
+export async function insertUser (
+    params: Utils.GenerateUsernameParams,
+    retry = 0,
+): Promise<RowUser> {
+    const userId = generateUsername(params);
 
     return new Promise((resolve, reject) => {
         database.run("INSERT INTO Users (id) VALUES (?)", [userId], (error) => {
             if (error) {
-                reject(error);
+                if (retry > 0) {
+                    return reject(error);
+                }
+
+                console.log("WILL RETRY USER INSERT");
+                return insertUser(params, retry + 1);
             }
 
             resolve({ id: userId });
@@ -38,7 +46,7 @@ export async function insertPost ({
             (?, ?, ?, ?) RETURNING *
         `, replacement, (error, row: Database.ReturningRowPost) => {
             if (error) {
-                reject(error);
+                return reject(error);
             }
 
             resolve(row);
@@ -61,7 +69,7 @@ export async function insertImage ({
             (?, ?) RETURNING *
         `, replacement, (error, row: RowImage) => {
             if (error) {
-                reject(error);
+                return reject(error);
             }
 
             resolve(row);
@@ -90,7 +98,7 @@ export async function selectPosts (): Promise<Database.RowPost[]> {
         `,
         (error, rows: Database.RowPost[]) => {
             if (error) {
-                reject(error);
+                return reject(error);
             }
 
             resolve(rows);

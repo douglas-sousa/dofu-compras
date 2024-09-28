@@ -1,20 +1,13 @@
 "use client";
-import { useState } from "react";
 import { twMerge } from "tailwind-merge";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 import Text from "@/components/atoms/Text";
 import PostCreation from "@/components/organisms/PostCreation";
 
 export default function Empty () {
-    const [inCreation, setInCreation] = useState(false);
-
-    function onPostCreationClick () {
-        setInCreation(true);
-    }
-
-    function onDrawerClose () {
-        setInCreation(false);
-    }
+    const searchParams = useSearchParams();
 
     return (
         <main className="font-[family-name:var(--font-geist-sans)] p-8">
@@ -26,20 +19,22 @@ export default function Empty () {
             </Text>
 
             <div className="flex justify-center py-8">
-                <button
+                <Link
                     className={twMerge(
                         "bg-blue-500 text-white py-4 px-8",
                         "rounded-sm text-lg"
                     )}
-                    onClick={onPostCreationClick}
+                    scroll={false}
+                    href={{
+                        query: { c: "" }
+                    }}
                 >
                     Crie um registro agora
-                </button>
+                </Link>
             </div>
 
             <PostCreation
-                isOpen={inCreation}
-                onClose={onDrawerClose}
+                isOpen={searchParams.has("c")}
             />
         </main>
     );

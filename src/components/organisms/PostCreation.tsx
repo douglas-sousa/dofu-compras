@@ -1,4 +1,7 @@
-import { useState, Fragment, useEffect, type ChangeEvent } from "react";
+import {
+    useState, Fragment, useEffect, useRef,
+    type ChangeEvent, type FormEvent
+} from "react";
 import Image from "next/image";
 import { twMerge } from "tailwind-merge";
 
@@ -9,12 +12,12 @@ import { createPost } from "@/services/handlers";
 
 type PostCreationProps = {
     isOpen: boolean;
-    onClose: () => void;
 }
 
-export default function PostCreation ({ isOpen, onClose }: PostCreationProps) {
+export default function PostCreation ({ isOpen }: PostCreationProps) {
     const [images, setImages] = useState<File[]>([]);
     const [previews, setPreviews] = useState<string[]>([]);
+    const formRef = useRef<HTMLFormElement>(null);
 
     useEffect(() => {
         if (images.length) {
@@ -52,6 +55,14 @@ export default function PostCreation ({ isOpen, onClose }: PostCreationProps) {
             .filter((_, previewIndex) => previewIndex !== index));
         setImages(images
             .filter((_, imageIndex) => imageIndex !== index));
+    }
+
+    function onDrawerClose () {
+        window.history.replaceState(
+            {},
+            document.title,
+            window.location.origin
+        );
     }
 
     function renderImageInput (index: number) {
@@ -102,12 +113,27 @@ export default function PostCreation ({ isOpen, onClose }: PostCreationProps) {
         );
     }
 
+    function handleSubmit (event: FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+        createPost(formData)
+            .then(() => {
+                formRef.current?.reset();
+                setImages([]);
+                setPreviews([]);
+            })
+            .catch(console.error);
+    }
+
     return (
         <Drawer
             isOpen={isOpen}
-            onClose={onClose}
+            onClose={onDrawerClose}
         >
-            <form action={createPost}>
+            <form
+                onSubmit={handleSubmit}
+                ref={formRef}
+            >
                 <Input
                     placeholder="Título do registro"
                     name="title"

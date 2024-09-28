@@ -1,6 +1,7 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 import { twMerge } from "tailwind-merge";
 
 import Text from "@/components/atoms/Text";
@@ -42,16 +43,6 @@ export default function Home ({ posts }: HomeProps) {
         }
     }, [searchParams]);
 
-    const [inCreation, setInCreation] = useState(false);
-
-    function onPostCreationClick () {
-        setInCreation(true);
-    }
-
-    function onDrawerClose () {
-        setInCreation(false);
-    }
-
     return (
         <main className="font-[family-name:var(--font-geist-sans)] p-8">
             <Text
@@ -67,9 +58,9 @@ export default function Home ({ posts }: HomeProps) {
                         key={post.id}
                         post={{
                             ...post,
-                            preview: post.description.length <= 85
+                            preview: post.description.length <= 69
                                 ? post.description
-                                : post.description.slice(0, 82).padEnd(85, "."),
+                                : post.description.slice(0, 66).padEnd(69, "."),
                             title: post.title.length <= 21
                                 ? post.title
                                 : post.title.slice(0, 18).padEnd(21, "."),
@@ -81,15 +72,18 @@ export default function Home ({ posts }: HomeProps) {
                 ))}
             </div>
 
-            <button
+            <Link
                 className={twMerge(
                     "bg-blue-500 text-white py-4 px-6",
                     "rounded-full text-xl fixed bottom-4 left-4"
                 )}
-                onClick={onPostCreationClick}
+                scroll={false}
+                href={{
+                    query: { c: "" }
+                }}
             >
                 +
-            </button>
+            </Link>
 
             <PostViewer
                 isOpen={searchParams.has("post")}
@@ -98,8 +92,7 @@ export default function Home ({ posts }: HomeProps) {
             />
 
             <PostCreation
-                isOpen={inCreation}
-                onClose={onDrawerClose}
+                isOpen={searchParams.has("c")}
             />
         </main>
     );
