@@ -7,7 +7,7 @@ import Text from "@/components/atoms/Text";
 export type PostPreviewProps = {
     title: string;
     preview: string;
-    date: Date;
+    createdAt: Date;
     side?: "right" | "left";
     className?: HTMLDivElement["className"];
     id: number;
@@ -16,12 +16,12 @@ export type PostPreviewProps = {
 export default function PostPreview ({
     title,
     preview,
-    date,
+    createdAt,
     className: overriddenStyle
 }: PostPreviewProps) {
-    const formattedMonth = format(date, "MMM", { locale: ptBR });
-    const formattedDay = format(date, "dd");
-    const formattedYear = format(date, "yyyy");
+    const formattedMonth = format(createdAt, "MMM", { locale: ptBR });
+    const formattedDay = format(createdAt, "dd");
+    const formattedYear = format(createdAt, "yyyy");
 
     return (
         <article

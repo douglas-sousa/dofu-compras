@@ -1,17 +1,21 @@
 import Empty from "@/components/templates/Empty";
 import Home from "@/components/templates/Home";
-import { getPosts } from "@/services/handlers";
+import { getPosts, getUser } from "@/services/handlers";
 
 export default async function App () {
-    const response = await getPosts();
+    const username = await getUser();
+    const { posts } = await getPosts();
 
-    if (!response.posts.length) {
+    if (!posts.length) {
         return (
             <Empty />
         );
     }
 
     return (
-        <Home posts={response.posts} />
+        <Home
+            posts={posts}
+            username={username!}
+        />
     );
 }

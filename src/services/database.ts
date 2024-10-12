@@ -2,17 +2,13 @@
 
 import sqlite from "sqlite3";
 
-import type { Database, Utils } from "@/services/types";
+import type { Database } from "@/services/types";
 import { generateUsername } from "@/services/utils";
-
 
 const database = new sqlite.Database(process.env.DATABASE_FILE!);
 
-export async function insertUser (
-    params: Utils.GenerateUsernameParams,
-    retry = 0,
-): Promise<RowUser> {
-    const userId = generateUsername(params);
+export async function insertUser (retry = 0): Promise<RowUser> {
+    const userId = generateUsername();
 
     return new Promise((resolve, reject) => {
         database.run("INSERT INTO Users (id) VALUES (?)", [userId], (error) => {
@@ -22,13 +18,14 @@ export async function insertUser (
                 }
 
                 console.log("WILL RETRY USER INSERT");
-                return insertUser(params, retry + 1);
+                return insertUser(retry + 1);
             }
 
             resolve({ id: userId });
         });
     });
 }
+
 export async function insertPost ({
     userId,
     postToCreate
@@ -36,14 +33,13 @@ export async function insertPost ({
     const replacement = [
         postToCreate.title,
         postToCreate.description,
-        postToCreate.date.toISOString().slice(0, -5).replace("T", " "),
         userId
     ];
 
     return new Promise((resolve, reject) => {
         database.get(`
-            INSERT INTO Posts (title, description, datetime, user_id) VALUES
-            (?, ?, ?, ?) RETURNING *
+            INSERT INTO Posts (title, description, user_id) VALUES
+            (?, ?, ?) RETURNING *
         `, replacement, (error, row: Database.ReturningRowPost) => {
             if (error) {
                 return reject(error);
@@ -84,7 +80,7 @@ export async function selectPosts (): Promise<Database.RowPost[]> {
                 Posts.id AS post_id,
                 Posts.title,
                 Posts.description,
-                Posts.datetime,
+                Posts.created_at,
                 Posts.user_id,
                 GROUP_CONCAT(DISTINCT Images.link) as image_links
             FROM 
@@ -94,7 +90,7 @@ export async function selectPosts (): Promise<Database.RowPost[]> {
             GROUP BY
                 Posts.id
             ORDER BY
-                Posts.datetime DESC
+                Posts.created_at DESC
         `,
         (error, rows: Database.RowPost[]) => {
             if (error) {
@@ -113,7 +109,6 @@ type CreatePostParams = {
     postToCreate: {
         title: string;
         description: string;
-        date: Date;
     }
 }
 

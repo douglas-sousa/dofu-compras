@@ -3,7 +3,7 @@ export namespace Frontend {
     export type Post = {
         title: string;
         description: string;
-        date: Date;
+        createdAt: Date;
         id: number;
         images: string[];
     };
@@ -28,15 +28,9 @@ export namespace Database {
         post_id: number;
         title: string;
         description: string;
-        datetime: string;
+        created_at: string;
         user_id: string;
         image_id: number;
         image_links: string;
     };
-}
-
-export namespace Utils {
-    export type GenerateUsernameParams = {
-        salt: string;
-    }
 }

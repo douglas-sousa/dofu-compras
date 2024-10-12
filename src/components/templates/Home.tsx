@@ -1,6 +1,4 @@
 "use client";
-import { useEffect } from "react";
-import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { twMerge } from "tailwind-merge";
 
@@ -9,39 +7,36 @@ import PostViewer from "@/components/organisms/PostViewer";
 import PostInTimeline from "@/components/organisms/PostInTimeline";
 import PostCreation from "@/components/organisms/PostCreation";
 import type { Frontend } from "@/services/types";
+import { usePostQueryParams } from "@/services/hooks";
 
 type HomeProps = {
     posts: Frontend.Post[];
+    username: string;
 }
 
-export default function Home ({ posts }: HomeProps) {
-    const searchParams = useSearchParams();
+export default function Home ({ posts, username }: HomeProps) {
+    const {
+        searchParams,
+        queryPost,
+        queryImageInZoom
+    } = usePostQueryParams(posts);
 
-    function getPostRequestedInURL () {
-        if (searchParams.has("post")) {
-            return posts.find((currentPost) =>
-                currentPost.id === Number(searchParams.get("post"))
-            );
-        }
+    console.log(posts);
+
+    function formatPostPreview (postToFormat: Frontend.Post, index: number) {
+        return {
+            ...postToFormat,
+            preview: postToFormat.description.length <= 69
+                ? postToFormat.description
+                : postToFormat.description.slice(0, 66).padEnd(69, "."),
+            title: postToFormat.title.length <= 21
+                ? postToFormat.title
+                : postToFormat.title.slice(0, 18).padEnd(21, "."),
+            side: index % 2
+                ? "right" as const
+                : "left" as const
+        };
     }
-
-    const queryPost = getPostRequestedInURL();
-
-    function getImageRequestedInURL () {
-        if (searchParams.has("image")) {
-            return queryPost?.images[Number(searchParams.get("image")) - 1];
-        }
-    }
-
-    const queryImageInZoom = getImageRequestedInURL();
-
-    useEffect(() => {
-        if (searchParams.has("post")) {
-            document.documentElement.style.overflowY = "hidden";
-        } else {
-            document.documentElement.style.overflowY = "";
-        }
-    }, [searchParams]);
 
     return (
         <main className="font-[family-name:var(--font-geist-sans)] p-8">
@@ -52,22 +47,20 @@ export default function Home ({ posts }: HomeProps) {
                 Registros de compras
             </Text>
 
+            <Text
+                variant="h2"
+                className="w-max mx-auto text-orange-500"
+            >
+                ☺
+                {" "}
+                {username}
+            </Text>
+
             <div className="pt-16 mx-auto w-[55.382rem]">
                 {posts.map((post, index) => (
                     <PostInTimeline
                         key={post.id}
-                        post={{
-                            ...post,
-                            preview: post.description.length <= 69
-                                ? post.description
-                                : post.description.slice(0, 66).padEnd(69, "."),
-                            title: post.title.length <= 21
-                                ? post.title
-                                : post.title.slice(0, 18).padEnd(21, "."),
-                            side: index % 2
-                                ? "right"
-                                : "left"
-                        }}
+                        post={formatPostPreview(post, index)}
                     />
                 ))}
             </div>
