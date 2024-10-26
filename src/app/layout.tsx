@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import localFont from "next/font/local";
 import { twMerge } from "tailwind-merge";
 import "./globals.css";
@@ -33,16 +34,36 @@ export default function RootLayout ({
             >
                 <header
                     className={twMerge(
-                        "bg-blue-500 p-2 text-white text-right text-sm",
-                        "fixed w-full z-40"
+                        "bg-blue-500 p-2 text-white text-sm",
+                        "fixed w-full z-40 flex items-center justify-between"
                     )}
                 >
-                    <a
-                        href="https://github.com/douglas-sousa"
-                        target="_blank"
+                    <section
+                        className="inline-flex gap-1 items-center"
                     >
+                        <Image
+                            src="/icon-secondary.png"
+                            alt="logo do dofu compras"
+                            width={18}
+                            height={18}
+                        />
+                        Dofu Compras
+                    </section>
+                    <section>
+                        <a
+                            href="https://github.com/douglas-sousa"
+                            target="_blank"
+                            className="inline-flex gap-1 items-center"
+                        >
                             Criação do Douglas
-                    </a>
+                            <Image
+                                src="/github-mark-white.png"
+                                alt="logo do github"
+                                width={18}
+                                height={18}
+                            />
+                        </a>
+                    </section>
                 </header>
                 {children}
             </body>
