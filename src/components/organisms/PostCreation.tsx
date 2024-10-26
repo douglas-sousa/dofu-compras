@@ -1,5 +1,5 @@
 import {
-    useState, Fragment, useEffect, useRef,
+    useState, Fragment, useRef,
     type ChangeEvent, type FormEvent
 } from "react";
 import Image from "next/image";
@@ -16,7 +16,6 @@ type PostCreationProps = {
 }
 
 export default function PostCreation ({ isOpen }: PostCreationProps) {
-    const [images, setImages] = useState<File[]>([]);
     const [previews, setPreviews] = useState<string[]>([]);
     const formRef = useRef<HTMLFormElement>(null);
 
@@ -27,49 +26,29 @@ export default function PostCreation ({ isOpen }: PostCreationProps) {
     } = usePostSubmit({
         onSuccess: () => {
             formRef.current?.reset();
-            setImages([]);
             setPreviews([]);
         },
         onFailure: console.error
     });
-
-    useEffect(() => {
-        if (images.length) {
-            images.forEach((currentImage, index) => {
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    setPreviews((currentPreviews) => {
-                        const newPreviews = [...currentPreviews];
-                        newPreviews[index] = reader.result as string;
-                        return newPreviews;
-                    });
-                };
-                reader.readAsDataURL(currentImage);
-            });
-        }
-    }, [images]);
 
     function handleImageInput (
         event: ChangeEvent<HTMLInputElement>,
         index: number
     ) {
         const file = event.target.files?.[0];
+        if (!file) return;
 
-        if (!!file) {
-            setImages((currentImages) => {
-                const newImages = [...currentImages];
-                newImages[index] = file;
-                return newImages;
-            });
-        }
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const currentPreviews = [...previews];
+            currentPreviews[index] = reader.result as string;
+            setPreviews(currentPreviews);
+        };
+        reader.readAsDataURL(file);
     }
 
     function handleImageDismiss (index: number) {
         if (!formRef.current) return;
-
-        function selected (_: unknown, resourceIndex: number) {
-            return resourceIndex !== index;
-        }
 
         const offset = 2;
         const inputFromImageIndex =
@@ -77,8 +56,10 @@ export default function PostCreation ({ isOpen }: PostCreationProps) {
 
         inputFromImageIndex.value = "";
 
-        setPreviews(previews.filter(selected));
-        setImages(images.filter(selected));
+        const currentPreviews = [...previews];
+        delete currentPreviews[index];
+
+        setPreviews(currentPreviews);
     }
 
     function onDrawerClose () {
