@@ -28,7 +28,7 @@ export async function uploadImage (
             .on("finish", async () => {
                 await bucketFile.makePublic();
                 resolve({
-                    link: `https://storage.googleapis.com/${bucket.name}/${bucketFile.name}`
+                    link: `https://${process.env.BUCKET_DOMAIN}/${bucket.name}/${bucketFile.name}`
                 });
             });
     });

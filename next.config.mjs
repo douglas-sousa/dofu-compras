@@ -1,11 +1,12 @@
 /** @type {import('next').NextConfig} */
+
 const nextConfig = {
     images: {
         remotePatterns: [
             {
                 protocol: "https",
-                hostname: "storage.googleapis.com",
-                pathname: "/bucket.dofu.com.br/**"
+                hostname: process.env.BUCKET_DOMAIN,
+                pathname: `/${process.env.BUCKET_ID}/**`
             }
         ]
     }
