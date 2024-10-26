@@ -8,6 +8,7 @@ import Text from "@/components/atoms/Text";
 
 type InputProps = InputHTMLAttributes<HTMLInputElement> & {
     isMultiline?: boolean;
+    errorMessage?: string;
 };
 
 export default function Input ({
@@ -16,6 +17,7 @@ export default function Input ({
     placeholder,
     onInput: callback,
     isMultiline = false,
+    errorMessage,
     ...rest
 }: InputProps) {
     const [numOfAvailableChars, setNumOfAvailableChars] =
@@ -40,6 +42,9 @@ export default function Input ({
         callback?.(event);
     }
 
+    const shouldRenderHint = numOfAvailableChars !== null
+        || !!errorMessage;
+
     return (
         <div className="relative">
             {createElement(
@@ -57,13 +62,18 @@ export default function Input ({
                     rows: 1
                 }
             )}
-            {numOfAvailableChars !== null && (
+            {shouldRenderHint && (
                 <Text
                     className={twMerge(
                         "text-xs absolute -bottom-4 right-4",
+                        !!errorMessage && "text-red-500"
                     )}
                 >
-                    {numOfAvailableChars} de {maxLength}
+                    {
+                        !!errorMessage
+                            ? errorMessage
+                            : `${numOfAvailableChars} de ${maxLength}`
+                    }
                 </Text>
             )}
         </div>
