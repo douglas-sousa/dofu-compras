@@ -86,7 +86,11 @@ export default function PostViewer ({
             <div
                 className="flex flex-col"
             >
-                <Text variant="h2">
+                <Text
+                    variant="h2"
+                    className="max-h-14 overflow-y-auto"
+                    title={post?.title}
+                >
                     {post?.title}
                 </Text>
                 <hr className="bg-gray-200 my-4" />
