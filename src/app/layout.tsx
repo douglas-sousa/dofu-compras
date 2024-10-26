@@ -15,7 +15,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-    title: "Dofu Purchases",
+    title: "Dofu Compras",
     description: "Algumas compras que eu decidi registrar"
 };
 
