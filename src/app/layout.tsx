@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { twMerge } from "tailwind-merge";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -30,6 +31,19 @@ export default function RootLayout ({
                     `${geistSans.variable} ${geistMono.variable} antialiased`
                 }
             >
+                <header
+                    className={twMerge(
+                        "bg-blue-500 p-2 text-white text-right text-sm",
+                        "fixed w-full z-40"
+                    )}
+                >
+                    <a
+                        href="https://github.com/douglas-sousa"
+                        target="_blank"
+                    >
+                            Criação do Douglas
+                    </a>
+                </header>
                 {children}
             </body>
         </html>
