@@ -10,7 +10,7 @@ export default function Empty () {
     const searchParams = useSearchParams();
 
     return (
-        <main className="font-[family-name:var(--font-geist-sans)] p-8">
+        <main className="font-[family-name:var(--font-geist-sans)] p-8 pt-12">
             <Text
                 variant="h1"
                 className="text-center"

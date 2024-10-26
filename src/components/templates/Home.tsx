@@ -11,17 +11,14 @@ import { usePostQueryParams } from "@/services/hooks";
 
 type HomeProps = {
     posts: Frontend.Post[];
-    username: string;
 }
 
-export default function Home ({ posts, username }: HomeProps) {
+export default function Home ({ posts }: HomeProps) {
     const {
         searchParams,
         queryPost,
         queryImageInZoom
     } = usePostQueryParams(posts);
-
-    console.log(posts);
 
     function formatPostPreview (postToFormat: Frontend.Post, index: number) {
         return {
@@ -39,21 +36,12 @@ export default function Home ({ posts, username }: HomeProps) {
     }
 
     return (
-        <main className="font-[family-name:var(--font-geist-sans)] p-8">
+        <main className="font-[family-name:var(--font-geist-sans)] p-8 pt-12">
             <Text
                 variant="h1"
                 className="text-center"
             >
                 Registros de compras
-            </Text>
-
-            <Text
-                variant="h2"
-                className="w-max mx-auto text-orange-500"
-            >
-                ☺
-                {" "}
-                {username}
             </Text>
 
             <div className="pt-16 mx-auto w-[55.382rem]">
