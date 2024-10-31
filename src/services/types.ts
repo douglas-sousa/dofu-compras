@@ -34,3 +34,20 @@ export namespace Database {
         image_links: string;
     };
 }
+
+export namespace JSend {
+    export type Success<T = unknown> = {
+        status: "success";
+        data: T;
+    };
+
+    export type Fail<T = unknown> = {
+        status: "fail";
+        data: T;
+    };
+
+    export type Error = {
+        status: "error";
+        message: string;
+    };
+}

@@ -1,14 +1,17 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 
 import * as database from "@/services/database";
 import * as bucket from "@/services/bucket";
 import {
     fromRowToFrontendPost,
     getUsernameFromCache,
-    upsertUsernameIntoCache
+    upsertUsernameIntoCache,
+    validatePostFormData
 } from "@/services/utils";
+import { type JSend } from "./types";
 
 async function createUser () {
     const entry = await database.insertUser();
@@ -18,43 +21,63 @@ async function createUser () {
 
 export async function getPosts () {
     try {
-        const rawPosts = await database.selectPosts();
+        const websiteCookies = cookies();
+        const username = getUsernameFromCache(websiteCookies);
+        const rawPosts = await database.selectPosts(username);
         return { posts: rawPosts.map(fromRowToFrontendPost) };
-    } catch {
+    } catch (error) {
+        console.error(error);
+
         return { posts: [] };
     }
 }
 
-export async function createPost (formdata: FormData) {
-    let username = getUsernameFromCache();
-    if (!username) {
-        username = await createUser();
+export async function createPost (formData: FormData) {
+    const requirement = validatePostFormData(formData);
+    if (Object.values(requirement.data).length) {
+        return requirement;
     }
 
-    upsertUsernameIntoCache(username);
-
-    const row = await database.insertPost({
-        userId: username,
-        postToCreate: {
-            description: formdata.get("description") as string,
-            title: formdata.get("title") as string
+    try {
+        const websiteCookies = cookies();
+        let username = getUsernameFromCache(websiteCookies);
+        if (!username) {
+            username = await createUser();
         }
-    });
-
-    const images = Array.from({ length: 3 })
-        .map((_, index) => formdata.get(`images.${index}`) as File)
-        .filter((currentFile) => currentFile.size > 0);
-
-    const uploadedImages = await Promise.all(images.map(
-        (currentFile, index) => bucket.uploadImage(currentFile, row.id, index)
-    ));
-
-    await Promise.all(uploadedImages.map((uImage) => {
-        return database.insertImage({
-            postId: row.id,
-            imageLink: uImage.link
+    
+        upsertUsernameIntoCache(username, websiteCookies);
+    
+        const row = await database.insertPost({
+            userId: username,
+            postToCreate: {
+                description: formData.get("description") as string,
+                title: formData.get("title") as string
+            }
         });
-    }));
+    
+        const images = Array.from({ length: 3 })
+            .map((_, index) => formData.get(`images.${index}`) as File)
+            .filter((currentFile) => currentFile.size > 0);
+    
+        const uploadedImages = await Promise.all(images.map(
+            (currentFile, index) =>
+                bucket.uploadImage(currentFile, row.id, index)
+        ));
+    
+        await Promise.all(uploadedImages.map((uImage) => {
+            return database.insertImage({
+                postId: row.id,
+                imageLink: uImage.link
+            });
+        }));
+    } catch (error) {
+        console.error(error);
+        return {
+            status: "error",
+            message: "Erro inesperado."
+        } satisfies JSend.Error;
+    }
+
 
     revalidatePath("/");
     redirect("/");

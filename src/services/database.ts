@@ -73,7 +73,9 @@ export async function insertImage ({
     });
 }
 
-export async function selectPosts (): Promise<Database.RowPost[]> {
+export async function selectPosts (
+    userId?: string
+): Promise<Database.RowPost[]> {
     return new Promise((resolve, reject) => {
         database.all(`
             SELECT 
@@ -87,11 +89,14 @@ export async function selectPosts (): Promise<Database.RowPost[]> {
                 Posts
             LEFT JOIN 
                 Images ON Posts.id = Images.post_id
+            WHERE
+                Posts.user_id = (?)
             GROUP BY
                 Posts.id
             ORDER BY
                 Posts.created_at DESC
         `,
+        [userId],
         (error, rows: Database.RowPost[]) => {
             if (error) {
                 return reject(error);

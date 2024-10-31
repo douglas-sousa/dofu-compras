@@ -24,11 +24,11 @@ export default function PostCreation ({ isOpen }: PostCreationProps) {
         isProcessing: isProcessingPost,
         formState
     } = usePostSubmit({
-        onSuccess: () => {
+        onFulfilled: () => {
             formRef.current?.reset();
             setPreviews([]);
         },
-        onFailure: console.error
+        onRejected: console.error
     });
 
     function handleImageInput (
@@ -142,7 +142,7 @@ export default function PostCreation ({ isOpen }: PostCreationProps) {
                     <Text
                         className="text-gray-600 text-base mb-4"
                     >
-                        Imagens do produto (máximo 3)
+                        Imagens do produto (no máximo 3)
                     </Text>
                     <section
                         className="flex justify-between relative"
