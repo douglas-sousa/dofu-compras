@@ -6,6 +6,7 @@ import { cookies } from "next/headers";
 import * as database from "@/services/database";
 import * as bucket from "@/services/bucket";
 import {
+    fromRowToFrontendInsights,
     fromRowToFrontendPost,
     getUsernameFromCache,
     upsertUsernameIntoCache,
@@ -17,6 +18,17 @@ async function createUser () {
     const entry = await database.insertUser();
     const username = entry.id;
     return username;
+}
+
+export async function getUser () {
+    const websiteCookies = cookies();
+    const username = getUsernameFromCache(websiteCookies);
+
+    return {
+        username,
+        createdAt: new Date("2024-11-01T23:19:43.248Z"),
+        expiresAt: new Date("2025-11-01T23:19:43.248Z")
+    };
 }
 
 export async function getPosts () {
@@ -81,4 +93,12 @@ export async function createPost (formData: FormData) {
 
     revalidatePath("/");
     redirect("/");
+}
+
+export async function getInsights () {
+    const websiteCookies = cookies();
+    const username = getUsernameFromCache(websiteCookies);
+    const rawInsights = await database.selectInsights(username);
+
+    return fromRowToFrontendInsights(rawInsights);
 }

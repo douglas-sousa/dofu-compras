@@ -35,6 +35,12 @@ export function usePostQueryParams (posts: Frontend.Post[]) {
         } else {
             document.documentElement.style.overflowY = "";
         }
+
+        return () => {
+            if (document.documentElement.style.overflowY) {
+                document.documentElement.style.overflowY = "";
+            }
+        };
     }, [searchParams]);
     
     return {

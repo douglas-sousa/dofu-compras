@@ -15,6 +15,37 @@ export function fromRowToFrontendPost (row: Database.RowPost): Frontend.Post {
     };
 }
 
+export function fromRowToFrontendInsights (row: Database.RowInsight[]) {
+    const total = {
+        numberOfPostsMade: row[0].total_number_of_posts
+    };
+
+    const insights = Array.from({ length: 12 }).map((_, index) => {
+        const monthPosition = index + 1;
+        const fullMonthName = new Intl.DateTimeFormat("pt-BR", {
+            month: "long"
+        })  // year 0 because it's irrelevant data
+            .format(new Date(0, index));
+
+        const databaseMatch = row.find(
+            (rInsight) => rInsight.month === String(monthPosition)
+        );
+
+        const formattedMonth = {
+            position: monthPosition,
+            numberOfPostsMade:
+                databaseMatch?.number_of_posts_made || 0,
+            numberOfImagesUploaded:
+                databaseMatch?.number_of_images_uploaded || 0,
+            fullName: fullMonthName
+        };
+
+        return formattedMonth;
+    });
+
+    return { total, insights };
+}
+
 export function generateUsername () {
     return Date.now().toString(36);
 }

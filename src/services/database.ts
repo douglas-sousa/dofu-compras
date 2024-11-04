@@ -107,6 +107,47 @@ export async function selectPosts (
     });
 }
 
+export async function selectInsights (
+    userId?: string
+): Promise<Database.RowInsight[]> {
+    return new Promise((resolve, reject) => {
+        database.all(`
+            SELECT
+                strftime('%m', Posts.created_at) AS month,
+                COUNT(DISTINCT Posts.id) AS number_of_posts_made,
+                COUNT(Images.id) AS number_of_images_uploaded,
+                (
+                    SELECT
+                        COUNT(DISTINCT P.id)
+                    FROM
+                        Posts P
+                    WHERE
+                        P.user_id = Posts.user_id
+                ) AS total_number_of_posts
+            FROM
+                Posts
+            LEFT JOIN
+                Images ON Posts.id = Images.post_id
+            WHERE
+                Posts.user_id = (?)
+            AND
+                strftime('%Y', Posts.created_at) = strftime('%Y', 'now')
+            GROUP
+                BY month
+            ORDER
+                BY month;
+        `,
+        [userId],
+        (error, rows: Database.RowInsight[]) => {
+            if (error) {
+                return reject(error);
+            }
+
+            resolve(rows);
+        });
+    });
+}
+
 // ----------------------------- TYPES -----------------------------
 
 type CreatePostParams = {
