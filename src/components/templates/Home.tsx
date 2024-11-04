@@ -55,8 +55,8 @@ export default function Home ({ posts }: HomeProps) {
 
             <Link
                 className={twMerge(
-                    "bg-blue-500 text-white py-4 px-6",
-                    "rounded-full text-xl fixed bottom-4 left-4"
+                    "bg-dofu-primary text-white py-4 px-6",
+                    "rounded-full text-xl fixed bottom-4 left-4 shadow-md"
                 )}
                 scroll={false}
                 href={{

@@ -25,8 +25,8 @@ export default function Empty () {
                 <div className="flex justify-center py-8">
                     <Link
                         className={twMerge(
-                            "bg-blue-500 text-white py-4 px-8",
-                            "rounded-sm text-lg"
+                            "bg-dofu-primary text-white py-4 px-8",
+                            "rounded-sm text-lg shadow-md"
                         )}
                         scroll={false}
                         href={{

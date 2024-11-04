@@ -21,7 +21,7 @@ export default function PostInTimeline ({ post }: PostInTimelineProps) {
                 >
                     ⚈
                     <span className={twMerge(
-                        "absolute text-2xl text-blue-500",
+                        "absolute text-2xl text-dofu-primary",
                         "top-[10%] left-[17%]",
                     )}>
                         ⚈

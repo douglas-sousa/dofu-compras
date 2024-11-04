@@ -178,7 +178,7 @@ export default function PostCreation ({ isOpen }: PostCreationProps) {
                 </div>
                 <button
                     className={twMerge(
-                        "bg-blue-500 text-white py-2 w-80",
+                        "bg-dofu-primary text-white py-2 w-80",
                         "rounded-sm text-lg absolute bottom-4",
                         "right-1/2 translate-x-1/2",
                         "flex justify-center items-center gap-4"

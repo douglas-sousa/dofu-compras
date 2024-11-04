@@ -10,7 +10,9 @@ const config: Config = {
         extend: {
             colors: {
                 background: "var(--background)",
-                foreground: "var(--foreground)"
+                foreground: "var(--foreground)",
+                "dofu-primary": "#3B82F6",
+                "dofu-secondary": "#F6AF3B"
             }
         }
     },
