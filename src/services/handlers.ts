@@ -8,7 +8,7 @@ import * as bucket from "@/services/bucket";
 import {
     fromRowToFrontendInsights,
     fromRowToFrontendPost,
-    getUsernameFromCache,
+    getUserFromCache,
     upsertUsernameIntoCache,
     validatePostFormData
 } from "@/services/utils";
@@ -16,26 +16,33 @@ import { type JSend } from "./types";
 
 async function createUser () {
     const entry = await database.insertUser();
-    const username = entry.id;
-    return username;
+    const createdAt = new Date(`${entry.created_at}Z`);
+    const expiresAt = new Date(createdAt.valueOf());
+    expiresAt.setFullYear(expiresAt.getFullYear() + 1);
+
+    return {
+        username: entry.id,
+        createdAt,
+        expiresAt
+    };
 }
 
 export async function getUser () {
     const websiteCookies = cookies();
-    const username = getUsernameFromCache(websiteCookies);
+    const user = getUserFromCache(websiteCookies);
 
     return {
-        username,
-        createdAt: new Date("2024-11-01T23:19:43.248Z"),
-        expiresAt: new Date("2025-11-01T23:19:43.248Z")
+        username: user?.username,
+        createdAt: user?.createdAt,
+        expiresAt: user?.expiresAt
     };
 }
 
 export async function getPosts () {
     try {
         const websiteCookies = cookies();
-        const username = getUsernameFromCache(websiteCookies);
-        const rawPosts = await database.selectPosts(username);
+        const user = getUserFromCache(websiteCookies);
+        const rawPosts = await database.selectPosts(user?.username);
         return { posts: rawPosts.map(fromRowToFrontendPost) };
     } catch (error) {
         console.error(error);
@@ -52,15 +59,15 @@ export async function createPost (formData: FormData) {
 
     try {
         const websiteCookies = cookies();
-        let username = getUsernameFromCache(websiteCookies);
-        if (!username) {
-            username = await createUser();
+        let user = getUserFromCache(websiteCookies);
+        if (!user) {
+            user = await createUser();
         }
     
-        upsertUsernameIntoCache(username, websiteCookies);
+        upsertUsernameIntoCache(user, websiteCookies);
     
         const row = await database.insertPost({
-            userId: username,
+            userId: user.username,
             postToCreate: {
                 description: formData.get("description") as string,
                 title: formData.get("title") as string
@@ -97,8 +104,13 @@ export async function createPost (formData: FormData) {
 
 export async function getInsights () {
     const websiteCookies = cookies();
-    const username = getUsernameFromCache(websiteCookies);
-    const rawInsights = await database.selectInsights(username);
+    const user = getUserFromCache(websiteCookies);
 
-    return fromRowToFrontendInsights(rawInsights);
+    try {
+        const rawInsights = await database.selectInsights(user?.username);
+        return fromRowToFrontendInsights(rawInsights);
+    } catch (error) {
+        console.error(error);
+        return { total: null, insights: null };
+    }
 }

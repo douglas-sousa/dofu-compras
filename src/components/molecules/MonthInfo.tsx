@@ -13,8 +13,8 @@ export default function MonthInfo ({
     position, fullName, numberOfImagesUploaded, numberOfPostsMade
 }: MonthInfoProps) {
     const hasDataToShow = numberOfPostsMade > 0;
-    const currentMonthPosition = new Date().getMonth() + 1;
-    const inFutureMonthRendering = position > currentMonthPosition;
+    const thisMonthPosition = new Date().getMonth() + 1;
+    const inFutureMonthRendering = position > thisMonthPosition;
 
     return (
         <article
@@ -24,32 +24,35 @@ export default function MonthInfo ({
                 "p-4 w-52 min-w-48 flex flex-col gap-4 bg-gray-100",
             )}
         >
-            <section className="flex items-center gap-2">
-                <div className={twMerge(
+            <section className="flex items-center gap-2 justify-evenly">
+                <span className={twMerge(
                     "w-10 h-10 flex items-center font-semibold",
                     "justify-center rounded-full text-lg",
-                    currentMonthPosition === position
+                    thisMonthPosition === position
                         && "bg-dofu-secondary text-white",
                 )}>
                     {String(position).padStart(2, "0")}
-                </div>
+                </span>
                 <Text className="font-semibold text-base capitalize">
-                    {fullName} 🗓️
+                    {fullName}
                 </Text>
+                <span>
+                    🗓️
+                </span>
             </section>
 
             {hasDataToShow && (
                 <section>
                     <div className="flex items-center gap-4">
-                        <Text className="text-xs">
-                    Postagens criadas
+                        <Text className="text-sm">
+                            Postagens criadas
                         </Text>
                         <Text>{numberOfPostsMade}</Text>
                     </div>
 
                     <div className="flex items-center gap-4">
-                        <Text className="text-xs">
-                    Imagens anexadas
+                        <Text className="text-sm">
+                            Imagens anexadas
                         </Text>
                         <Text>{numberOfImagesUploaded}</Text>
                     </div>

@@ -1,11 +1,18 @@
+import { redirect } from "next/navigation";
+
 import Text from "@/components/atoms/Text";
 import UserInfo from "@/components/molecules/UserInfo";
 import MonthInfo from "@/components/molecules/MonthInfo";
 import { getInsights, getUser } from "@/services/handlers";
 
 export default async function Me () {
-    const { insights, total } = await getInsights();
     const { username, createdAt, expiresAt } = await getUser();
+    const { insights, total } = await getInsights();
+
+    const hasValidUser = !!username && !!createdAt && !!expiresAt;
+    if (!hasValidUser || !insights) {
+        redirect("/");
+    }
 
     const currentYear = new Date().getFullYear();
 
@@ -21,7 +28,7 @@ export default async function Me () {
                     </div>
                 </aside>
                 <UserInfo
-                    username={username!}
+                    username={username}
                     createdAt={createdAt}
                     expiresAt={expiresAt}
                     totalNumberOfPostsMade={total.numberOfPostsMade}

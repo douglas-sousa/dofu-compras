@@ -11,7 +11,10 @@ export async function insertUser (retry = 0): Promise<RowUser> {
     const userId = generateUsername();
 
     return new Promise((resolve, reject) => {
-        database.run("INSERT INTO Users (id) VALUES (?)", [userId], (error) => {
+        database.get(`
+            INSERT INTO Users (id) VALUES (?) RETURNING *
+        `,
+        [userId], (error, row: RowUser) => {
             if (error) {
                 if (retry > 0) {
                     return reject(error);
@@ -21,7 +24,7 @@ export async function insertUser (retry = 0): Promise<RowUser> {
                 return insertUser(retry + 1);
             }
 
-            resolve({ id: userId });
+            resolve(row);
         });
     });
 }
@@ -163,7 +166,10 @@ type CreateImageParams = {
     imageLink: string;
 };
 
-type RowUser = { id: string };
+type RowUser = {
+    id: string;
+    created_at: string;
+};
 
 type RowImage = {
     id: number;

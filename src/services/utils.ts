@@ -50,20 +50,36 @@ export function generateUsername () {
     return Date.now().toString(36);
 }
 
-export function getUsernameFromCache (cookies: ReadonlyRequestCookies) {
+export function getUserFromCache (cookies: ReadonlyRequestCookies) {
     if (cookies.has(USER_COOKIE_KEY)) {
-        const username = cookies.get(USER_COOKIE_KEY)?.value;
-        return username;
+        const user = cookies.get(USER_COOKIE_KEY)!.value;
+        const parsedUser = JSON.parse(user);
+
+        return {
+            username: parsedUser.username as string,
+            createdAt: new Date(parsedUser.createdAt),
+            expiresAt: new Date(parsedUser.expiresAt)
+        };
     }
 }
 
+type User = NonNullable<ReturnType<typeof getUserFromCache>>;
+
 export function upsertUsernameIntoCache (
-    username: string,
+    user: User,
     cookies: ReadonlyRequestCookies,
 ) {
+    const expiresAt = new Date();
+    expiresAt.setFullYear(expiresAt.getFullYear() + 1);
+
+    const stringifiedUser = JSON.stringify({
+        ...user,
+        expiresAt
+    });
+
     cookies.set(
         USER_COOKIE_KEY,
-        username,
+        stringifiedUser,
         {
             maxAge: 60 * 60 * 24 * 365,
             secure: process.env.NODE_ENV === "production",
