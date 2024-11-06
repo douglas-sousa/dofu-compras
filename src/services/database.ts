@@ -7,6 +7,8 @@ import { generateUsername } from "@/services/utils";
 
 const database = new sqlite.Database(process.env.DATABASE_FILE!);
 
+database.run("PRAGMA foreign_keys = ON", console.log);
+
 export async function insertUser (retry = 0): Promise<RowUser> {
     const userId = generateUsername();
 
@@ -14,7 +16,8 @@ export async function insertUser (retry = 0): Promise<RowUser> {
         database.get(`
             INSERT INTO Users (id) VALUES (?) RETURNING *
         `,
-        [userId], (error, row: RowUser) => {
+        [userId],
+        (error, row: RowUser) => {
             if (error) {
                 if (retry > 0) {
                     return reject(error);
@@ -147,6 +150,24 @@ export async function selectInsights (
             }
 
             resolve(rows);
+        });
+    });
+}
+
+export async function deleteAccount (
+    userId?: string
+): Promise<void> {
+    return new Promise((resolve, reject) => {
+        database.run(`
+            DELETE FROM Users WHERE Users.id = (?)
+        `,
+        [userId],
+        (error) => {
+            if (error) {
+                return reject(error);
+            }
+
+            resolve();
         });
     });
 }

@@ -47,7 +47,7 @@ export default function PostViewer ({
         <Drawer
             isOpen={isOpen}
             onClose={onDrawerClose}
-            overlay={!imageInZoom ? undefined : (
+            overlay={!!imageInZoom && (
                 <div
                     className={twMerge(
                         "fixed top-0 left-0 size-full z-40",

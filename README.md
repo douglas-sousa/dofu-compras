@@ -11,6 +11,8 @@ A hobby project for recording some purchases
 
 [BEAST - game field analysis platform](https://www.behance.net/gallery/210495351/BEAST-game-field-analysis-platform?tracking_source=search_projects|month+chart&l=110)
 
+[Day 836 • Delete Pop Up UI Design](https://www.behance.net/gallery/80476113/Day-836-Delete-Pop-Up-UI-Design?tracking_source=search_projects|delete+design&l=82)
+
 ### Main techs used
 
 - next.js

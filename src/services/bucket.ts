@@ -33,3 +33,13 @@ export async function uploadImage (
             });
     });
 }
+
+export async function deleteImage (
+    imageLink: string
+) {
+    const imageName = imageLink.split("/").at(-1);
+    const bucket = storage.bucket(process.env.BUCKET_ID!);
+    if (imageName) {
+        return bucket.file(imageName).delete({ ignoreNotFound: true });
+    }
+}

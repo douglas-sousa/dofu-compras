@@ -16,16 +16,14 @@ export default function Drawer ({
 }: DrawerProps) {
 
     function renderOverlay () {
-        const overlay = providedOverlay
-            ? providedOverlay
-            : (
-                <div
-                    className={twMerge(
-                        "fixed top-0 left-0 w-full h-full z-40 bg-black/15"
-                    )}
-                    onClick={onClose}
-                />
-            );
+        const overlay = providedOverlay || (
+            <div
+                className={twMerge(
+                    "fixed top-0 left-0 w-full h-full z-40 bg-black/15"
+                )}
+                onClick={onClose}
+            />
+        );
 
         return isOpen && overlay;
     }

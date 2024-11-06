@@ -12,6 +12,7 @@ import {
     upsertUsernameIntoCache,
     validatePostFormData
 } from "@/services/utils";
+import { USER_COOKIE_KEY } from "./constants";
 import { type JSend } from "./types";
 
 async function createUser () {
@@ -91,6 +92,7 @@ export async function createPost (formData: FormData) {
         }));
     } catch (error) {
         console.error(error);
+
         return {
             status: "error",
             message: "Erro inesperado."
@@ -113,4 +115,32 @@ export async function getInsights () {
         console.error(error);
         return { total: null, insights: null };
     }
+}
+
+export async function deleteAccount () {
+    const websiteCookies = cookies();
+    const user = getUserFromCache(websiteCookies);
+    
+    try {
+        const { posts } = await getPosts();
+
+        const promises = posts.map((eachPost) => {
+            return eachPost.images.map(bucket.deleteImage);
+        });
+
+        await Promise.all(promises.flat());
+
+        await database.deleteAccount(user?.username);
+        websiteCookies.delete(USER_COOKIE_KEY);
+    } catch (error) {
+        console.error(error);
+
+        return {
+            status: "error",
+            message: "Erro inesperado."
+        } satisfies JSend.Error;
+    }
+
+    revalidatePath("/");
+    redirect("/");
 }
