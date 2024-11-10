@@ -42,45 +42,17 @@ export default function PostViewer ({
     }
 
     const paragraphs = post?.description.split("\r\n");
-    
+
     return (
         <Drawer
             isOpen={isOpen}
             onClose={onDrawerClose}
             overlay={!!imageInZoom && (
-                <div
-                    className={twMerge(
-                        "fixed top-0 left-0 size-full z-40",
-                        "bg-black/50 p-8 backdrop-blur-sm"
-                    )}
-                    onClick={onDrawerClose}
-                >
-                    <button
-                        className={twMerge(
-                            "absolute top-2 left-4 cursor-pointer px-[0.3rem]",
-                            "text-white z-40 bg-gray-400 hover:bg-gray-500",
-                            "rounded-full"
-                        )}
-                        onClick={(event) => {
-                            event.stopPropagation();
-                            onImageClose();
-                        }}
-                    >
-                        ✕
-                    </button>
-                    <div className="h-full w-[calc(100%-24rem)] relative">
-                        <Image
-                            key={imageInZoom}
-                            src={imageInZoom}
-                            alt="Imagem do produto"
-                            fill
-                            objectFit="contain"
-                            onClick={(event) => {
-                                event.stopPropagation();
-                            }}
-                        />
-                    </div>
-                </div>
+                <CustomOverlay
+                    imageSource={imageInZoom}
+                    onDrawerClose={onDrawerClose}
+                    onImageClose={onImageClose}
+                />
             )}
         >
             <div
@@ -108,7 +80,12 @@ export default function PostViewer ({
                     {paragraphs?.map((eachParagraph, index) => (
                         <Text
                             key={index}
-                            className="mt-4"
+                            className={twMerge(
+                                // making empty paragraph take space by adding margin and hidden overflow
+                                // hidden overflow will prevent margin collapsing when 2 or more empty paragraphs are together
+                                // https://stackoverflow.com/a/19718884
+                                eachParagraph === "" && "mt-4 overflow-hidden"
+                            )}
                         >
                             {eachParagraph}
                         </Text>
@@ -133,5 +110,53 @@ export default function PostViewer ({
                 </section>
             </div>
         </Drawer>
+    );
+}
+
+type CustomOverlayProps = {
+    imageSource: string;
+    onDrawerClose: () => void;
+    onImageClose: () => void;
+}
+
+function CustomOverlay ({
+    imageSource,
+    onDrawerClose,
+    onImageClose
+}: CustomOverlayProps) {
+    return (
+        <div
+            className={twMerge(
+                "fixed top-0 left-0 size-full z-40",
+                "bg-black/50 p-8 backdrop-blur-sm"
+            )}
+            onClick={onDrawerClose}
+        >
+            <button
+                className={twMerge(
+                    "absolute top-2 left-4 cursor-pointer px-[0.3rem]",
+                    "text-white z-40 bg-gray-400 hover:bg-gray-500",
+                    "rounded-full"
+                )}
+                onClick={(event) => {
+                    event.stopPropagation();
+                    onImageClose();
+                }}
+            >
+                ✕
+            </button>
+            <div className="h-full w-[calc(100%-24rem)] relative">
+                <Image
+                    key={imageSource}
+                    src={imageSource}
+                    alt="Imagem do produto"
+                    fill
+                    objectFit="contain"
+                    onClick={(event) => {
+                        event.stopPropagation();
+                    }}
+                />
+            </div>
+        </div>
     );
 }
