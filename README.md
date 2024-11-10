@@ -1,4 +1,4 @@
-# Dofu Purchases
+# Dofu Compras
 
 A hobby project for recording some purchases
 
