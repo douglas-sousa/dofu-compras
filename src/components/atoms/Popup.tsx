@@ -17,7 +17,7 @@ export default function Popup ({
         <>
             <div
                 className={twMerge(
-                    "fixed left-1/2 -translate-x-1/2 -translate-y-[36rem]",
+                    "fixed left-1/2 -translate-x-1/2 top-0 -translate-y-full",
                     "bg-white shadow-xl transition-all z-50 rounded-sm p-2",
                     "max-w-md min-w-64",
                     isOpen && "top-1/2 -translate-y-1/2"

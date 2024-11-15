@@ -127,7 +127,8 @@ export function useAccountDelete ({ onRejected }: {
     };
 }
 
-export function usePostDelete ({ onRejected }: {
+export function usePostDelete ({ onFulfilled, onRejected }: {
+    onFulfilled: (payload: JSend.Success<null>) => void,
     onRejected: (payload: JSend.Error) => void
 }) {
     const [isProcessing, setIsProcessing] = useState(false);
@@ -145,6 +146,11 @@ export function usePostDelete ({ onRejected }: {
                 .then((response) => {
                     if (response?.status === "error") {
                         onRejected(response);
+                    } else {
+                        onFulfilled({
+                            status: "success",
+                            data: null
+                        });
                     }
                 })
                 .finally(done);

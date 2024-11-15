@@ -17,21 +17,27 @@ type HomeProps = {
 }
 
 export default function Home ({ posts }: HomeProps) {
+    const [isOpen, setIsOpen] = useState(false);
+    const [postIdToManage, setPostIdToManage] = useState<null | number>(null);
+
     const {
         searchParams,
         queryPost,
         queryImageInZoom
     } = usePostQueryParams(posts);
 
+    function onPopupClose () {
+        setPostIdToManage(null);
+        setIsOpen(false);
+    }
+
     const {
         isProcessing: isDeletingPost,
         delete: deletePostById
     } = usePostDelete({
+        onFulfilled: onPopupClose,
         onRejected: console.error
     });
-
-    const [isOpen, setIsOpen] = useState(false);
-    const [postIdToManage, setPostIdToManage] = useState<null | number>(null);
 
     return (
         <main className="font-[family-name:var(--font-geist-sans)] p-8 pt-12">
@@ -88,7 +94,7 @@ export default function Home ({ posts }: HomeProps) {
             <DeletionPopup
                 isOpen={isOpen}
                 isDeleting={isDeletingPost}
-                onPopupClose={() => setIsOpen(false)}
+                onPopupClose={onPopupClose}
                 onDelete={() => deletePostById(String(postIdToManage))}
                 title="Dejesa mesmo deletar essa postagem?"
             />
