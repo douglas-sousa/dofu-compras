@@ -1,12 +1,11 @@
 "use client";
+import { useState } from "react";
 import Link from "next/link";
 import { twMerge } from "tailwind-merge";
 import { format } from "date-fns";
 
 import Text from "@/components/atoms/Text";
-import Popup from "@/components/atoms/Popup";
-import Spinner from "@/components/atoms/Spinner";
-import { useState } from "react";
+import DeletionPopup from "@/components/molecules/DeletionPopup";
 import { useAccountDelete } from "@/services/hooks";
 
 type UserInfoProps = {
@@ -22,10 +21,6 @@ export default function UserInfo ({
     const initials = username.slice(0, 2);
     const customFormatString = "dd/MM/yyyy";
     const [isOpen, setIsOpen] = useState(false);
-
-    function onPopupClose () {
-        setIsOpen(false);
-    }
 
     const {
         isProcessing: isDeletingAccount,
@@ -125,48 +120,13 @@ export default function UserInfo ({
                     Deletar conta
                 </button>
             </aside>
-            <Popup
+            <DeletionPopup
                 isOpen={isOpen}
-                onClose={onPopupClose}
-            >
-                <div className="py-8 px-6 flex flex-col gap-8 items-center">
-                    <Text className="text-5xl text-red-500">
-                        ⚠
-                    </Text>
-
-                    <Text className="text-center">
-                        Dejesa deletar essa conta e postagens feitas?
-                    </Text>
-
-                    <section className="w-full flex justify-between gap-8">
-                        <button
-                            className={twMerge(
-                                "bg-red-500 text-white flex-1 rounded-sm",
-                                "shadow-md py-2",
-                                "flex justify-center items-center gap-4"
-                            )}
-                            onClick={deleteAccount}
-                        >
-                            {isDeletingAccount && (
-                                <Spinner
-                                    className="-ml-8"
-                                />
-                            )}
-                            Deletar
-                        </button>
-
-                        <button
-                            className={twMerge(
-                                "border-gray-300 border-solid border",
-                                "shadow-md flex-1 py-2 rounded-sm"
-                            )}
-                            onClick={onPopupClose}
-                        >
-                            Manter a conta
-                        </button>
-                    </section>
-                </div>
-            </Popup>
+                isDeleting={isDeletingAccount}
+                onPopupClose={() => setIsOpen(false)}
+                onDelete={deleteAccount}
+                title="Dejesa deletar essa conta e postagens feitas?"
+            />
         </>
     );
 }

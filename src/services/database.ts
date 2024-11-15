@@ -175,6 +175,54 @@ export async function deleteAccount (
     });
 }
 
+export async function selectPostById (
+    postId?: string
+): Promise<Database.RowPost> {
+    return new Promise((resolve, reject) => {
+        database.get(`
+            SELECT 
+                Posts.id AS post_id,
+                Posts.title,
+                Posts.description,
+                Posts.created_at,
+                Posts.user_id,
+                GROUP_CONCAT(DISTINCT Images.link) as image_links
+            FROM 
+                Posts
+            LEFT JOIN 
+                Images ON Posts.id = Images.post_id
+            WHERE
+                Posts.id = (?)
+        `,
+        [postId],
+        (error, row: Database.RowPost) => {
+            if (error) {
+                return reject(error);
+            }
+
+            resolve(row);
+        });
+    });
+}
+
+export async function deletePostById (
+    postId?: string
+): Promise<void> {
+    return new Promise((resolve, reject) => {
+        database.run(`
+            DELETE FROM Posts WHERE Posts.id = (?)
+        `,
+        [postId],
+        (error) => {
+            if (error) {
+                return reject(error);
+            }
+
+            resolve();
+        });
+    });
+}
+
 // ----------------------------- TYPES -----------------------------
 
 type CreatePostParams = {

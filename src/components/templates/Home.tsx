@@ -1,13 +1,16 @@
 "use client";
+import { useState } from "react";
 import Link from "next/link";
 import { twMerge } from "tailwind-merge";
 
 import Text from "@/components/atoms/Text";
+import DeletionPopup from "@/components/molecules/DeletionPopup";
 import PostViewer from "@/components/organisms/PostViewer";
 import PostInTimeline from "@/components/organisms/PostInTimeline";
 import PostCreation from "@/components/organisms/PostCreation";
+import { usePostDelete, usePostQueryParams } from "@/services/hooks";
+import { formatPostPreview } from "@/services/utils";
 import type { Frontend } from "@/services/types";
-import { usePostQueryParams } from "@/services/hooks";
 
 type HomeProps = {
     posts: Frontend.Post[];
@@ -20,20 +23,15 @@ export default function Home ({ posts }: HomeProps) {
         queryImageInZoom
     } = usePostQueryParams(posts);
 
-    function formatPostPreview (postToFormat: Frontend.Post, index: number) {
-        return {
-            ...postToFormat,
-            preview: postToFormat.description.length <= 69
-                ? postToFormat.description
-                : postToFormat.description.slice(0, 66).padEnd(69, "."),
-            title: postToFormat.title.length <= 21
-                ? postToFormat.title
-                : postToFormat.title.slice(0, 18).padEnd(21, "."),
-            side: index % 2
-                ? "right" as const
-                : "left" as const
-        };
-    }
+    const {
+        isProcessing: isDeletingPost,
+        delete: deletePostById
+    } = usePostDelete({
+        onRejected: console.error
+    });
+
+    const [isOpen, setIsOpen] = useState(false);
+    const [postIdToManage, setPostIdToManage] = useState<null | number>(null);
 
     return (
         <main className="font-[family-name:var(--font-geist-sans)] p-8 pt-12">
@@ -49,6 +47,17 @@ export default function Home ({ posts }: HomeProps) {
                     <PostInTimeline
                         key={post.id}
                         post={formatPostPreview(post, index)}
+                        deleteButton={(
+                            <button
+                                className="text-2xl text-red-500 mt-20"
+                                onClick={() => {
+                                    setPostIdToManage(post.id);
+                                    setIsOpen(true);
+                                }}
+                            >
+                                🗑
+                            </button>
+                        )}
                     />
                 ))}
             </div>
@@ -74,6 +83,14 @@ export default function Home ({ posts }: HomeProps) {
 
             <PostCreation
                 isOpen={searchParams.has("c")}
+            />
+
+            <DeletionPopup
+                isOpen={isOpen}
+                isDeleting={isDeletingPost}
+                onPopupClose={() => setIsOpen(false)}
+                onDelete={() => deletePostById(String(postIdToManage))}
+                title="Dejesa mesmo deletar essa postagem?"
             />
         </main>
     );

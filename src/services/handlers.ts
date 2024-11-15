@@ -148,3 +148,25 @@ export async function deleteAccount () {
     revalidatePath("/");
     redirect("/");
 }
+
+export async function deletePostById (postId: string) {
+    try {
+        const { image_links } = await database.selectPostById(postId);
+        const images = image_links.split(",");
+
+        await database.deletePostById(postId);
+
+        await Promise.all(images.map(bucket.deleteImage));
+
+    } catch (error) {
+        console.error(error);
+
+        return {
+            status: "error",
+            message: "Erro inesperado."
+        } satisfies JSend.Error;
+    }
+    
+    revalidatePath("/");
+    redirect("/");
+}

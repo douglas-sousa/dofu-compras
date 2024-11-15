@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
 import Text from "@/components/atoms/Text";
-import UserInfo from "@/components/molecules/UserInfo";
+import UserInfo from "@/components/organisms/UserInfo";
 import MonthInfo from "@/components/molecules/MonthInfo";
 import { getInsights, getUser } from "@/services/handlers";
 

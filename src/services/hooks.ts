@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
-import { createPost, deleteAccount } from "@/services/handlers";
+import { createPost, deleteAccount, deletePostById } from "@/services/handlers";
 import {
     validatePostFormData, type PostSubmitFail
 } from "@/services/utils";
@@ -117,6 +117,31 @@ export function useAccountDelete ({ onRejected }: {
             setIsProcessing(true);
 
             deleteAccount()
+                .then((response) => {
+                    if (response?.status === "error") {
+                        onRejected(response);
+                    }
+                })
+                .finally(done);
+        }
+    };
+}
+
+export function usePostDelete ({ onRejected }: {
+    onRejected: (payload: JSend.Error) => void
+}) {
+    const [isProcessing, setIsProcessing] = useState(false);
+
+    function done () {
+        setIsProcessing(false);
+    }
+
+    return {
+        isProcessing,
+        delete: (postId: string) => {
+            setIsProcessing(true);
+
+            deletePostById(postId)
                 .then((response) => {
                     if (response?.status === "error") {
                         onRejected(response);

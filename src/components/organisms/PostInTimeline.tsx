@@ -1,3 +1,4 @@
+import { type ReactNode } from "react";
 import Link from "next/link";
 import { twMerge } from "tailwind-merge";
 
@@ -7,9 +8,13 @@ import PostPreview, {
 
 type PostInTimelineProps = {
     post: PostPreviewProps;
+    deleteButton: ReactNode;
 }
 
-export default function PostInTimeline ({ post }: PostInTimelineProps) {
+export default function PostInTimeline ({
+    post,
+    deleteButton
+}: PostInTimelineProps) {
     function renderTimelinePoint () {
         return (
             <span className={twMerge(
@@ -48,9 +53,10 @@ export default function PostInTimeline ({ post }: PostInTimelineProps) {
     return (
         <div className={twMerge(
             "flex items-center",
-            post.side === "left" && "ml-[1.6rem]",
-            post.side === "right" && "flex-row-reverse mr-5"
+            post.side === "left" && "ml-2",
+            post.side === "right" && "flex-row-reverse mr-1"
         )}>
+            {deleteButton}
             <Link
                 scroll={false}
                 href={{

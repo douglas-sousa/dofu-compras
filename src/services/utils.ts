@@ -112,3 +112,18 @@ export function validatePostFormData (formData: FormData) {
 
     return failure;
 }
+
+export function formatPostPreview (postToFormat: Frontend.Post, index: number) {
+    return {
+        ...postToFormat,
+        preview: postToFormat.description.length <= 69
+            ? postToFormat.description
+            : postToFormat.description.slice(0, 66).padEnd(69, "."),
+        title: postToFormat.title.length <= 21
+            ? postToFormat.title
+            : postToFormat.title.slice(0, 18).padEnd(21, "."),
+        side: index % 2
+            ? "right" as const
+            : "left" as const
+    };
+}
