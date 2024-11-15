@@ -3,14 +3,17 @@
 import sqlite from "sqlite3";
 
 import type { Database } from "@/services/types";
-import { generateUsername } from "@/services/utils";
 
 const database = new sqlite.Database(process.env.DATABASE_FILE!);
 
-database.run("PRAGMA foreign_keys = ON", console.log);
+database.run("PRAGMA foreign_keys = ON", (error) => {
+    if (error) {
+        console.error(error);
+    }
+});
 
 export async function insertUser (retry = 0): Promise<RowUser> {
-    const userId = generateUsername();
+    const userId = crypto.randomUUID();
 
     return new Promise((resolve, reject) => {
         database.get(`

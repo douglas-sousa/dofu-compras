@@ -9,7 +9,7 @@ import {
     fromRowToFrontendInsights,
     fromRowToFrontendPost,
     getUserFromCache,
-    upsertUsernameIntoCache,
+    upsertUserIntoCache,
     validatePostFormData
 } from "@/services/utils";
 import { USER_COOKIE_KEY } from "./constants";
@@ -22,7 +22,8 @@ async function createUser () {
     expiresAt.setFullYear(expiresAt.getFullYear() + 1);
 
     return {
-        username: entry.id,
+        id: entry.id,
+        username: createdAt.getTime().toString(36),
         createdAt,
         expiresAt
     };
@@ -33,7 +34,10 @@ export async function getUser () {
     const user = getUserFromCache(websiteCookies);
 
     return {
-        username: user?.username,
+        id: user?.id,
+        username: user?.createdAt
+            ? user.createdAt.getTime().toString(36)
+            : undefined,
         createdAt: user?.createdAt,
         expiresAt: user?.expiresAt
     };
@@ -43,7 +47,7 @@ export async function getPosts () {
     try {
         const websiteCookies = cookies();
         const user = getUserFromCache(websiteCookies);
-        const rawPosts = await database.selectPosts(user?.username);
+        const rawPosts = await database.selectPosts(user?.id);
         return { posts: rawPosts.map(fromRowToFrontendPost) };
     } catch (error) {
         console.error(error);
@@ -65,10 +69,10 @@ export async function createPost (formData: FormData) {
             user = await createUser();
         }
     
-        upsertUsernameIntoCache(user, websiteCookies);
+        upsertUserIntoCache(user, websiteCookies);
     
         const row = await database.insertPost({
-            userId: user.username,
+            userId: user.id,
             postToCreate: {
                 description: formData.get("description") as string,
                 title: formData.get("title") as string
@@ -109,7 +113,7 @@ export async function getInsights () {
     const user = getUserFromCache(websiteCookies);
 
     try {
-        const rawInsights = await database.selectInsights(user?.username);
+        const rawInsights = await database.selectInsights(user?.id);
         return fromRowToFrontendInsights(rawInsights);
     } catch (error) {
         console.error(error);
@@ -130,7 +134,7 @@ export async function deleteAccount () {
 
         await Promise.all(promises.flat());
 
-        await database.deleteAccount(user?.username);
+        await database.deleteAccount(user?.id);
         websiteCookies.delete(USER_COOKIE_KEY);
     } catch (error) {
         console.error(error);

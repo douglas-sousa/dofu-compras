@@ -46,18 +46,16 @@ export function fromRowToFrontendInsights (row: Database.RowInsight[]) {
     return { total, insights };
 }
 
-export function generateUsername () {
-    return Date.now().toString(36);
-}
-
 export function getUserFromCache (cookies: ReadonlyRequestCookies) {
     if (cookies.has(USER_COOKIE_KEY)) {
         const user = cookies.get(USER_COOKIE_KEY)!.value;
         const parsedUser = JSON.parse(user);
+        const createdAt = new Date(parsedUser.createdAt);
 
         return {
-            username: parsedUser.username as string,
-            createdAt: new Date(parsedUser.createdAt),
+            id: parsedUser.id as string,
+            username: createdAt.getTime().toString(36),
+            createdAt,
             expiresAt: new Date(parsedUser.expiresAt)
         };
     }
@@ -65,7 +63,7 @@ export function getUserFromCache (cookies: ReadonlyRequestCookies) {
 
 type User = NonNullable<ReturnType<typeof getUserFromCache>>;
 
-export function upsertUsernameIntoCache (
+export function upsertUserIntoCache (
     user: User,
     cookies: ReadonlyRequestCookies,
 ) {
@@ -73,7 +71,8 @@ export function upsertUsernameIntoCache (
     expiresAt.setFullYear(expiresAt.getFullYear() + 1);
 
     const stringifiedUser = JSON.stringify({
-        ...user,
+        id: user.id,
+        createdAt: user.createdAt,
         expiresAt
     });
 
