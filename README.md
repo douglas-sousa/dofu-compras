@@ -22,5 +22,5 @@ A hobby project for recording some purchases
 ### Previews
 ![Página inicial sem postagens](https://files.catbox.moe/l3t909.png)
 ![Página inicial com postagens](https://files.catbox.moe/ptuis9.png)
-![Página inicial ao tentar deletar postagem](https://files.catbox.moe/idsnfm.png)
+![Página inicial ao tentar deletar postagem](https://files.catbox.moe/1tyv4j.png)
 ![Página de detalhes do usuário](https://files.catbox.moe/cn98xq.png)

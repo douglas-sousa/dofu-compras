@@ -96,7 +96,7 @@ export default function Home ({ posts }: HomeProps) {
                 isDeleting={isDeletingPost}
                 onPopupClose={onPopupClose}
                 onDelete={() => deletePostById(String(postIdToManage))}
-                title="Dejesa mesmo deletar essa postagem?"
+                title="Deseja mesmo deletar essa postagem?"
             />
         </main>
     );
