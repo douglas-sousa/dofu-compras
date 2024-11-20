@@ -46,6 +46,30 @@ export namespace Database {
         number_of_images_uploaded: number;
         total_number_of_posts: number;
     }
+
+    export type CreatePostParams = {
+        userId: string;
+        postToCreate: {
+            title: string;
+            description: string;
+        }
+    }
+    
+    export type CreateImageParams = {
+        postId: number;
+        imageLink: string;
+    };
+    
+    export type RowUser = {
+        id: string;
+        created_at: string;
+    };
+    
+    export type RowImage = {
+        id: number;
+        post_id: number;
+        link: string;
+    }
 }
 
 export namespace JSend {

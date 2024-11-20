@@ -13,21 +13,7 @@ import {
     validatePostFormData
 } from "@/services/utils";
 import { USER_COOKIE_KEY } from "./constants";
-import { type JSend } from "./types";
-
-async function createUser () {
-    const entry = await database.insertUser();
-    const createdAt = new Date(`${entry.created_at}Z`);
-    const expiresAt = new Date(createdAt.valueOf());
-    expiresAt.setFullYear(expiresAt.getFullYear() + 1);
-
-    return {
-        id: entry.id,
-        username: createdAt.getTime().toString(36),
-        createdAt,
-        expiresAt
-    };
-}
+import type { JSend } from "./types";
 
 export async function getUser () {
     const websiteCookies = cookies();
@@ -169,4 +155,18 @@ export async function deletePostById (postId: string) {
     
     revalidatePath("/");
     redirect("/");
+}
+
+async function createUser () {
+    const entry = await database.insertUser();
+    const createdAt = new Date(`${entry.created_at}Z`);
+    const expiresAt = new Date(createdAt.valueOf());
+    expiresAt.setFullYear(expiresAt.getFullYear() + 1);
+
+    return {
+        id: entry.id,
+        username: createdAt.getTime().toString(36),
+        createdAt,
+        expiresAt
+    };
 }
