@@ -30,9 +30,10 @@ export async function getUser () {
 }
 
 export async function getPosts () {
+    const websiteCookies = cookies();
+    const user = getUserFromCache(websiteCookies);
+
     try {
-        const websiteCookies = cookies();
-        const user = getUserFromCache(websiteCookies);
         const rawPosts = await database.selectPosts(user?.id);
         return { posts: rawPosts.map(fromRowToFrontendPost) };
     } catch (error) {
@@ -48,9 +49,10 @@ export async function createPost (formData: FormData) {
         return requirement;
     }
 
+    const websiteCookies = cookies();
+    let user = getUserFromCache(websiteCookies);
+
     try {
-        const websiteCookies = cookies();
-        let user = getUserFromCache(websiteCookies);
         if (!user) {
             user = await createUser();
         }
