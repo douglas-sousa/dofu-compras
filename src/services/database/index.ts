@@ -1,15 +1,6 @@
 import type { Database } from "@/services/types";
 
-import * as pg from "./pg";
-import * as sqlite from "./sqlite";
-
-const DATABASE = {
-    production: pg,
-    development: sqlite,
-    test: sqlite
-};
-
-const database = DATABASE[process.env.NODE_ENV];
+const database = await loadDatabase();
 
 export async function insertUser () {
     const userId = crypto.randomUUID();
@@ -164,7 +155,7 @@ export async function deletePostById (
 }
 
 function sql ([query]: TemplateStringsArray) {
-    if (process.env.NODE_ENV === "development") {
+    if (process.env.NODE_ENV !== "production") {
         return query;
     }
 
@@ -182,4 +173,16 @@ function sql ([query]: TemplateStringsArray) {
         .replace(/strftime/g, "EXTRACT");
 
     return transformedQuery;
+}
+
+async function loadDatabase () {
+    let database;
+
+    if (process.env.NODE_ENV !== "production") {
+        database = await import("./sqlite");
+    } else {
+        database = await import("./pg");
+    }
+
+    return database;
 }
