@@ -1,13 +1,11 @@
 "use server";
-import path from "node:path";
 import { Readable } from "node:stream";
 import { Storage } from "@google-cloud/storage";
 import type { ReadableStream } from "node:stream/web";
 import type { Bucket } from "@/services/types";
 
-const BUCKET_KEYFILE = path.join(process.cwd(), "./keys.json");
 const storage = new Storage({
-    keyFilename: BUCKET_KEYFILE,
+    credentials: buildCredentials(),
     projectId: process.env.PROJECT_ID
 });
 
@@ -42,4 +40,10 @@ export async function deleteImage (
     if (imageName) {
         return bucket.file(imageName).delete({ ignoreNotFound: true });
     }
+}
+
+function buildCredentials () {
+    const jsonBuffer = Buffer.from(process.env.BUCKET_CREDENTIAL!, "base64");
+
+    return JSON.parse(jsonBuffer.toString());
 }
